@@ -1,0 +1,14 @@
+packages:
+  - fe
+  - migration
+  - openapi
+  - proto/gen/typescript
+allowBuilds:
+  '@scarf/scarf': true
+  '@tree-sitter-grammars/tree-sitter-yaml': true
+  core-js-pure: true
+  esbuild: true
+  tree-sitter: true
+  tree-sitter-json: true
+catalog:
+  "@typespec/compiler": "^1.15.0"

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
+  "packages": [
+    "go@1.27.0",
+    "nodejs@24.12.0",
+    "pnpm@11.22.0",
+    "sqlc@1.31.1",
+    "golangci-lint@2.13.1",
+    "pgformatter@5.10",
+    "openapi-generator-cli@7.25.0",
+    "protobuf@35.1",
+    "protoc-gen-go@1.36.12",
+    "protoc-go-inject-tag@1.4.0",
+    "protoc-gen-connect-go@1.20.0",
+    "protoc-gen-es@2.12.0",
+    "buf@1.72.0",
+    "watchexec@2.5.1",
+    "zellij@0.45.0",
+    "grpcurl@1.9.4"
+  ],
+  "shell": {
+    "init_hook": [
+      "export DEVBOX_SEARCH_HOST=https://www.nixsearch.com",
+      ". ./init-hook.sh"
+    ]
+  },
+  "env": {
+    "VACUUM": "openapi/.spectral.yaml"
+  },
+  "env_from": ".env"
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "group:monorepos",
+    "group:recommended",
+    ":dependencyDashboard",
+    ":semanticCommitTypeAll(chore)"
+  ],
+  "timezone": "UTC",
+  "schedule": ["before 6am on monday"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"],
+    "automerge": true
+  },
+  "enabledManagers": [
+    "npm",
+    "gomod",
+    "devbox",
+    "docker-compose",
+    "devcontainer",
+    "github-actions",
+    "custom.regex"
+  ],
+  "postUpdateOptions": ["gomodTidy", "pnpmDedupe"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Go version in go.work",
+      "managerFilePatterns": ["/(^|/)go\\.work$/"],
+      "matchStrings": ["(?m)^go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\s*$"],
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version",
+      "versioningTemplate": "semver-coerced"
+    },
+    {
+      "customType": "regex",
+      "description": "golangci-lint version pinned in the CI workflow",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "version: (?<currentValue>v\\d+\\.\\d+\\.\\d+)\\s",
+        "golangci-lint/v2/cmd/golangci-lint@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Group GitHub Actions updates (minor/patch automerge via the rule below)",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "pinDigests": false
+    },
+    {
+      "description": "Automerge low-risk updates (minor/patch/digest) once checks pass",
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin"],
+      "matchCurrentVersion": "!/^0\\./",
+      "automerge": true
+    },
+    {
+      "description": "Group all non-major JS dependencies",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "js dependencies (non-major)"
+    },
+    {
+      "description": "Group all non-major Go modules",
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "go modules (non-major)"
+    },
+    {
+      "description": "Group non-major devbox (nix) tool updates",
+      "matchManagers": ["devbox"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "devbox tools (non-major)"
+    },
+    {
+      "description": "Group container images used in devcontainer / compose",
+      "matchManagers": ["docker-compose", "devcontainer"],
+      "groupName": "dev containers",
+      "matchUpdateTypes": ["minor", "patch", "digest"]
+    },
+    {
+      "description": "Keep linters / formatters in one PR",
+      "matchPackageNames": ["oxlint", "oxfmt", "golangci-lint", "golangci/golangci-lint"],
+      "groupName": "lint & format tooling"
+    },
+    {
+      "description": "Keep protobuf / connect / buf codegen tools and runtimes together",
+      "matchPackageNames": [
+        "/^buf/",
+        "/protobuf/",
+        "/protoc-gen/",
+        "/^@bufbuild\\//",
+        "/^@connectrpc\\//",
+        "/^connectrpc\\.com\\//",
+        "/^google\\.golang\\.org\\/(protobuf|grpc)/"
+      ],
+      "groupName": "protobuf & connect"
+    },
+    {
+      "description": "Keep OpenAPI / TypeSpec / orval tooling together",
+      "matchPackageNames": ["/^@typespec\\//", "/^orval/", "/openapi-generator/"],
+      "groupName": "openapi tooling"
+    },
+    {
+      "description": "Keep drizzle packages together",
+      "matchPackageNames": ["/^drizzle-/"],
+      "groupName": "drizzle"
+    },
+    {
+      "description": "Major updates: separate PRs, never automerged, labelled",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major-update"],
+      "schedule": ["before 6am on the first day of the month"]
+    },
+    {
+      "description": "Runtime/toolchain versions (Go, Node, pnpm) need a human look",
+      "matchPackageNames": ["go", "golang", "nodejs", "node", "pnpm"],
+      "automerge": false,
+      "groupName": "toolchain versions"
+    },
+    {
+      "description": "Dev-only type packages: low noise, automerge",
+      "matchPackageNames": ["/^@types\\//"],
+      "automerge": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "schedule": ["at any time"],
+    "minimumReleaseAge": null
+  }
+}

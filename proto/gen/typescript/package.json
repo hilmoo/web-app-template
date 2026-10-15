@@ -1,0 +1,39 @@
+{
+  "name": "proto",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./*": {
+      "types": "./dist/namespaces/*.d.ts",
+      "import": "./dist/namespaces/*.mjs",
+      "require": "./dist/namespaces/*.cjs"
+    }
+  },
+  "scripts": {
+    "generate": "node scripts/generate-index.js",
+    "build": "node scripts/generate-index.js && rollup -c",
+    "dev": "node scripts/generate-index.js && rollup -c -w"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.16.0",
+    "@bufbuild/protoc-gen-es": "^2.16.0",
+    "@connectrpc/connect": "^2.2.0",
+    "@connectrpc/validate": "^0.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "rollup": "^4.60.0",
+    "rollup-plugin-dts": "^6.4.1",
+    "typescript": "^6.0.2"
+  },
+  "private": true
+}

@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  fmt:
+    desc: Run formatters
+    cmds:
+      - pnpm exec oxfmt
+
+  generate:
+    desc: Generate Drizzle ORM artifacts
+    cmds:
+      - pnpm db:generate
+
+  push:
+    desc: Push Drizzle ORM migrations to the database
+    cmds:
+      - pnpm db:push
+
+  migrate:
+    desc: Run Drizzle ORM migrations
+    cmds:
+      - pnpm db:migrate

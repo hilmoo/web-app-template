@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+includes:
+  migration:
+    taskfile: migration/Taskfile.yml
+    dir: migration
+  openapi:
+    taskfile: openapi/Taskfile.yml
+    dir: openapi
+  core:
+    taskfile: core/Taskfile.yml
+    dir: core
+  fe:
+    taskfile: fe/Taskfile.yml
+    dir: fe
+  proto:
+    taskfile: proto/Taskfile.yml
+    dir: proto
+
+tasks:
+  dev:
+    desc: Start core + fe in a zellij session
+    cmds:
+      - task: dev:kill
+      - defer: zellij attach dev
+      - zellij --session dev --new-session-with-layout zellij-dev.kdl
+
+  dev:kill:
+    desc: Kill the dev session and any orphaned watchers/servers
+    ignore_error: true
+    cmds:
+      - zellij delete-session dev --force
+      # core
+      - pkill -f 'watchexec -w internal' || true
+      - pkill -f '\.bin/main\.bin serve' || true
+      # fe
+      - pkill -f 'vite\.js dev --port 3000' || true
+
+  gen-all:
+    desc: Generate everything (migration -> typespec -> openapi -> proto -> codegen)
+    cmds:
+      - task: gen-sql
+      - task: gen-api
+
+  gen-sql:
+    desc: Generate SQL migration files from the drizzle schema
+    cmds:
+      - protoforge run migration
+      - task: core:gen-sql
+
+  gen-api:
+    desc: Generate TypeSpec, OpenAPI and proto files
+    cmds:
+      - protoforge run typespec openapi proto
+      - task: fe:orval
+
+  lint:
+    desc: Lint core and fe
+    cmds:
+      - task: core:lint
+      - task: fe:lint
+
+  build:
+    desc: Build the frontend and embed it into the core binary
+    cmds:
+      - task: fe:build
+      - task: core:build

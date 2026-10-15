@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+vars:
+  MAIN_GO: cmd/main.go
+
+tasks:
+  default:
+    desc: Watch for changes and run the development environment
+    cmd: watchexec
+      -w
+      internal
+      -r
+      --stop-signal
+      SIGINT
+      --stop-timeout
+      15s
+      --shell
+      sh
+      --
+      "go build -tags dev -o ./.bin/main.bin ./cmd && (fuser -k 8080/tcp >/dev/null 2>&1; exec ./.bin/main.bin serve)"
+    env:
+      DATA_DIR: "../data"
+
+  build:
+    desc: Build the production binary (run `task fe:build` first, then copy fe/dist into internal/app/dist)
+    cmds:
+      - rm -rf internal/app/dist
+      - cp -r ../fe/dist internal/app/dist
+      - go build -o ./.bin/main.bin ./cmd
+
+  lint:
+    desc: Run linters
+    cmds:
+      - golangci-lint run --fix
+
+  gen:
+    desc: Generate sqlc code
+    cmds:
+      - task: gen-sql
+
+  gen-sql:
+    desc: Generate SQL code using sqlc
+    vars:
+      SQLC_OUT_DIR: internal/gen/sqlc
+      SQLC_GEN_FILES: '"*.sql.go" -o -name "models.go" -o -name "db.go" -o -name
+        "copyfrom.go" -o -name "batch.go"'
+    cmds:
+      - task: format-sql
+      - find {{.SQLC_OUT_DIR}} -type f \( -name {{.SQLC_GEN_FILES}} \) -delete
+      - sqlc generate -f sqlc.yaml
+
+  format-sql:
+    desc: "Format SQL files in core"
+    dir: internal/db/sql
+    cmds:
+      - for f in *.sql; do pg_format "$f" -o "$f" -t -W 1 --no-space-function;
+        done
+
+  migrate-up:
+    desc: Run database migrations
+    cmds:
+      - go run {{.MAIN_GO}} migrate up
+
+  migrate-up-to:*:
+    desc: Run database migrations up to a specific version
+    vars:
+      VERSION: "{{index .MATCH 0}}"
+    cmds:
+      - go run {{.MAIN_GO}} migrate up-to {{.VERSION}}
+
+  migrate-down:
+    desc: Rollback database migrations
+    cmds:
+      - go run {{.MAIN_GO}} migrate down
+
+  migrate-down-to:*:
+    desc: Rollback database migrations down to a specific version
+    vars:
+      VERSION: "{{index .MATCH 0}}"
+    cmds:
+      - go run {{.MAIN_GO}} migrate down-to {{.VERSION}}
+
+  migrate-status:
+    desc: Show current database migration version
+    cmds:
+      - go run {{.MAIN_GO}} migrate version
+
+  test-integration-all:
+    desc: Run integration tests
+    cmds:
+      - go test -v ./internal/features/... -tags=integration
+
+  test-integration:*:
+    desc: Run integration tests
+    vars:
+      FEATURE: "{{index .MATCH 0}}"
+    cmds:
+      - go test -v ./internal/features/{{.FEATURE}}/... -tags=integration

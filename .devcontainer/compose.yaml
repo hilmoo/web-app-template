@@ -1,0 +1,23 @@
+services:
+  workspace:
+    image: ghcr.io/hilmoo/containers/my-devcontainer:v0.7.1
+    volumes:
+      - ../..:/workspaces:cached
+      - shared-nix-2.35:/nix
+    command: sleep infinity
+
+  db:
+    image: postgres:18-trixie
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: web-app-template
+    volumes:
+      - web-app-template-postgres:/var/lib/postgresql/18/docker
+    network_mode: service:workspace
+
+volumes:
+  web-app-template-postgres:
+  shared-nix-2.35:
+    name: ${NIX_VOLUME_NAME:-shared-nix-2.35}
+    external: true

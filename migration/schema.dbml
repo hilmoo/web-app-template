@@ -1,0 +1,38 @@
+Table "sessions" {
+  "id" uuid [primary key, not null, default: `gen_random_uuid()`, note: 'Unique identifier.']
+  "user_id" uuid [not null, note: 'ID of the user who owns this session.']
+  "token_hash" text [not null, unique, note: 'Hash of the session token.']
+  "user_agent" text [note: 'User agent of the client that created the session.']
+  "ip_address" text [note: 'IP address of the client that created the session.']
+  "expires_at" timestamptz [not null, note: 'When the session expires.']
+  "created_at" timestamptz [not null, default: `now()`, note: 'When it was created.']
+
+  indexes {
+    ("user_id") [name: 'idx_sessions_user_id']
+    ("expires_at") [name: 'idx_sessions_expires_at']
+  }
+}
+
+Table "todos" {
+  "id" uuid [primary key, not null, default: `gen_random_uuid()`, note: 'Unique identifier.']
+  "title" text [not null, note: 'Short title of the todo.']
+  "description" text [note: 'Optional longer description.']
+  "done" boolean [not null, default: false, note: 'Whether the todo has been completed.']
+  "owner_id" uuid [not null, note: 'ID of the user who owns the todo.']
+  "created_at" timestamptz [not null, default: `now()`, note: 'When it was created.']
+
+  indexes {
+    ("owner_id") [name: 'idx_todos_owner_id']
+  }
+}
+
+Table "users" {
+  "id" uuid [primary key, not null, default: `gen_random_uuid()`, note: 'Unique identifier.']
+  "email" text [not null, unique, note: 'Email address of the user.']
+  "password_hash" text [note: 'Hash of the user\'s password. Null for passwordless accounts.']
+  "full_name" text [not null, note: 'Full name of the user.']
+  "created_at" timestamptz [not null, default: `now()`, note: 'When it was created.']
+}
+
+Ref: "sessions"."user_id" > "users"."id" [delete: cascade]
+Ref: "todos"."owner_id" > "users"."id" [delete: cascade]

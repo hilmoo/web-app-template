@@ -1,0 +1,16 @@
+{
+  "name": "openapi",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@typespec/compiler": "catalog:",
+    "@typespec/http": "^1.16.0",
+    "@typespec/openapi": "^1.16.0",
+    "@typespec/openapi3": "^1.16.0",
+    "@typespec/rest": "^0.85.0"
+  },
+  "devDependencies": {
+    "openapi-format": "^1.33.7"
+  }
+}

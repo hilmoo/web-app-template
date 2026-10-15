@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/hilmoo/protoforge/refs/tags/v0.0.1/schema/protoforge.schema.json
+
+version: 1
+
+env_file: .env
+
+# drizzle schema -> SQL migrations (synced into core)
+migration:
+  dir: migration
+  generate: true
+  push: true
+  docs: {}
+  sync:
+    to: ../core/internal/db/migration/migrations
+
+# drizzle schema -> TypeSpec models, TypeSpec -> OpenAPI
+typespec:
+  dir: openapi
+  entry: ./src
+  from_drizzle:
+    schema_dir: ../migration/src/schema
+    out: src/_generated/db.tsp
+
+openapi:
+  dir: openapi
+  format: true
+  go_tags: true
+
+# OpenAPI -> .proto, then `task` (proto/Taskfile.yml default) runs buf generate
+proto:
+  dir: proto
+  flatten_requests: true
+  codegen:
+    enabled: true
+    commands:
+      - task

@@ -1,0 +1,8 @@
+.env
+node_modules/
+.ruff_cache/
+
+# protoforge
+openapi/src/@typespec/
+proto/.tmp/
+node_modules/.cache/protoforge/

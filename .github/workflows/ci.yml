@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go lint & format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: core/go.mod
+          cache-dependency-path: |
+            core/go.sum
+            proto/gen/go/go.sum
+
+      # core embeds internal/app/dist; make sure the directory is non-empty
+      - name: Ensure embedded dist exists
+        run: |
+          mkdir -p core/internal/app/dist
+          [ -n "$(ls -A core/internal/app/dist)" ] || touch core/internal/app/dist/.gitkeep
+
+      - name: Lint (golangci-lint)
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.13.1
+          working-directory: core
+
+      - name: Check formatting (golangci-lint fmt)
+        working-directory: core
+        run: golangci-lint fmt --diff
+
+  ts:
+    name: TypeScript lint & format (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [fe, migration]
+    defaults:
+      run:
+        working-directory: ${{ matrix.package }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v3
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Lint (oxlint)
+        run: pnpm exec oxlint
+
+      - name: Check formatting (oxfmt)
+        run: pnpm exec oxfmt --check

@@ -1,0 +1,24 @@
+{
+  "name": "web-app-template",
+  "version": "1.0.0",
+  "private": true,
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.20.0",
+      "onFail": "warn"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^24.0.0",
+      "onFail": "warn"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@typespec/compiler": "catalog:",
+    "oxfmt": "^0.65.0",
+    "oxlint": "^1.80.0",
+    "typescript": "^7.0.2"
+  }
+}

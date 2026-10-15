@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  default:
+    desc: Start the development server
+    cmds:
+      - pnpm dev
+
+  build:
+    desc: Production build into dist/
+    cmds:
+      - pnpm build
+
+  typecheck:
+    desc: Type-check the project
+    cmds:
+      - pnpm typecheck
+
+  lint:
+    desc: Run linters
+    cmds:
+      - pnpm exec oxlint --fix
+
+  fmt:
+    desc: Run formatters
+    cmds:
+      - pnpm exec oxfmt
+
+  orval:
+    desc: Generate zod schemas from the OpenAPI document using Orval
+    cmds:
+      - rm -rf src/api
+      - pnpm exec orval

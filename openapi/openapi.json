@@ -1,0 +1,996 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Core Service",
+    "version": "1.0.0",
+    "description": "web-app-template"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/",
+      "description": "Default server",
+      "variables": {}
+    }
+  ],
+  "paths": {
+    "/services.v1.AuthService/AuthLogin": {
+      "post": {
+        "operationId": "authLogin",
+        "description": "Authenticate a user with email and password, returning a session cookie on success.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPasswordLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMeUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/services.v1.AuthService/AuthLogout": {
+      "post": {
+        "operationId": "authLogout",
+        "description": "Log out the currently authenticated user, invalidating the session cookie.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded."
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/services.v1.AuthService/AuthMe": {
+      "post": {
+        "operationId": "authMe",
+        "description": "Get the currently authenticated user's profile.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMeUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/services.v1.AuthService/AuthRegister": {
+      "post": {
+        "operationId": "authRegister",
+        "description": "Create a new user account with an email and password, returning a session cookie on success.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPasswordRegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMeUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/services.v1.AuthService/AuthUpdateMe": {
+      "post": {
+        "operationId": "authUpdateMe",
+        "description": "Update the currently authenticated user's profile.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthMeUpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthMeUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/services.v1.TodoService/TodoCreate": {
+      "post": {
+        "operationId": "todoCreate",
+        "description": "Create a new todo.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoModelCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoModelBase"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Todo"
+        ]
+      }
+    },
+    "/services.v1.TodoService/TodoDelete": {
+      "post": {
+        "operationId": "todoDelete",
+        "description": "Delete a todo by its ID.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoModelId"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded."
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Todo"
+        ]
+      }
+    },
+    "/services.v1.TodoService/TodoGet": {
+      "post": {
+        "operationId": "todoGet",
+        "description": "Get a todo by its ID.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoModelId"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoModelBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Todo"
+        ]
+      }
+    },
+    "/services.v1.TodoService/TodoList": {
+      "post": {
+        "operationId": "todoList",
+        "description": "List all todos of the current user.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TodoModelBase"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Todo"
+        ]
+      }
+    },
+    "/services.v1.TodoService/TodoUpdate": {
+      "post": {
+        "operationId": "todoUpdate",
+        "description": "Update a todo by its ID.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoModelUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoModelBase"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonErrorError500"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Todo"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthMeUpdateUser": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "email": {
+                "description": "Email address of the user.",
+                "type": "string",
+                "format": "email",
+                "example": "user@example.com",
+                "x-oapi-codegen-extra-tags": {
+                  "validate": "omitempty,email"
+                }
+              },
+              "full_name": {
+                "description": "Full name of the user.",
+                "type": "string",
+                "example": "Jane Doe",
+                "x-oapi-codegen-extra-tags": {
+                  "validate": "omitempty"
+                }
+              }
+            },
+            "description": "The template for adding optional properties."
+          }
+        ]
+      },
+      "AuthMeUser": {
+        "description": "A user account.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier.",
+            "type": "string",
+            "format": "uuid",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required,uuid"
+            }
+          },
+          "email": {
+            "description": "Email address of the user.",
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required,email"
+            }
+          },
+          "full_name": {
+            "description": "Full name of the user.",
+            "type": "string",
+            "example": "Jane Doe",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "created_at": {
+            "description": "When it was created.",
+            "type": "string",
+            "format": "date-time",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "created_at"
+        ]
+      },
+      "AuthPasswordLoginRequest": {
+        "description": "Authenticate with an email and password.",
+        "type": "object",
+        "properties": {
+          "email": {
+            "description": "Email address of the user.",
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required,email"
+            }
+          },
+          "password": {
+            "description": "The account password",
+            "type": "string",
+            "example": "hunter2-correct-horse",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthPasswordRegisterRequest": {
+        "description": "Create a new user account with an email and password.",
+        "type": "object",
+        "properties": {
+          "email": {
+            "description": "Email address of the user.",
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required,email"
+            }
+          },
+          "full_name": {
+            "description": "Full name of the user.",
+            "type": "string",
+            "example": "Jane Doe",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "password": {
+            "description": "The account password",
+            "type": "string",
+            "example": "hunter2-correct-horse",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "full_name",
+          "password"
+        ]
+      },
+      "CommonErrorError": {
+        "description": "An error response with details about the failure.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "A unique identifier for this error instance",
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "reason": {
+            "description": "A human-readable explanation of the error",
+            "type": "string",
+            "example": "Resource Not Found",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "status": {
+            "description": "The HTTP status code associated with this error",
+            "type": "string",
+            "example": "Not Found",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "message": {
+            "description": "An optional message providing more details about the error",
+            "type": "string",
+            "example": "The requested resource could not be found",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          },
+          "code": {
+            "description": "An optional machine-readable error code for programmatic handling",
+            "type": "integer",
+            "example": 404,
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "details": {
+            "description": "Optional additional details about the error, such as missing resources or validation errors",
+            "type": "object",
+            "example": {
+              "missingResource": "assignment with ID 123 not found"
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "reason",
+          "status",
+          "code"
+        ]
+      },
+      "CommonErrorError400": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CommonErrorError"
+          }
+        ]
+      },
+      "CommonErrorError401": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CommonErrorError"
+          }
+        ]
+      },
+      "CommonErrorError404": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CommonErrorError"
+          }
+        ]
+      },
+      "CommonErrorError500": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CommonErrorError"
+          }
+        ]
+      },
+      "TodoModelBase": {
+        "description": "A user todo.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier.",
+            "type": "string",
+            "format": "uuid",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required,uuid"
+            }
+          },
+          "title": {
+            "description": "Short title of the todo.",
+            "type": "string",
+            "example": "Buy milk",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "description": {
+            "description": "Optional longer description.",
+            "type": "string",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          },
+          "done": {
+            "description": "Whether the todo has been completed.",
+            "type": "boolean"
+          },
+          "owner_id": {
+            "description": "ID of the user who owns the todo.",
+            "type": "string",
+            "format": "uuid",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required,uuid"
+            }
+          },
+          "created_at": {
+            "description": "When it was created.",
+            "type": "string",
+            "format": "date-time",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "done",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      "TodoModelCreateRequest": {
+        "description": "A request to create a new todo.",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Short title of the todo.",
+            "type": "string",
+            "example": "Buy milk",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "description": {
+            "description": "Optional longer description.",
+            "type": "string",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "TodoModelId": {
+        "type": "object",
+        "properties": {
+          "todo_id": {
+            "description": "The ID of the todo.",
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          }
+        },
+        "required": [
+          "todo_id"
+        ]
+      },
+      "TodoModelUpdateRequest": {
+        "description": "A request to update a todo.",
+        "type": "object",
+        "properties": {
+          "todo_id": {
+            "description": "The ID of the todo.",
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "required"
+            }
+          },
+          "title": {
+            "description": "Short title of the todo.",
+            "type": "string",
+            "example": "Buy milk",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          },
+          "description": {
+            "description": "Optional longer description.",
+            "type": "string",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          },
+          "done": {
+            "description": "Whether the todo has been completed.",
+            "type": "boolean",
+            "x-oapi-codegen-extra-tags": {
+              "validate": "omitempty"
+            }
+          }
+        },
+        "required": [
+          "todo_id"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Todo"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+version: v2
+inputs:
+  - directory: registry
+plugins:
+  # Go
+  - local: protoc-gen-go
+    out: gen/go
+    opt:
+      - paths=source_relative
+  - local: protoc-gen-connect-go
+    out: gen/go
+    opt:
+      - paths=source_relative
+      - simple
+
+  # TypeScript
+  - local: protoc-gen-es
+    out: gen/typescript/src
