@@ -226,7 +226,7 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
-  fe:
+  frontend:
     dependencies:
       '@bufbuild/protobuf':
         specifier: ^2.16.0

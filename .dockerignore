@@ -1,0 +1,12 @@
+.git
+.devbox
+.devcontainer
+.github
+.vscode
+.env
+**/node_modules
+**/.bin
+frontend/dist
+core/internal/app/dist
+frontend/.tanstack
+data

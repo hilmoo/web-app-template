@@ -12,16 +12,16 @@ includes:
   core:
     taskfile: core/Taskfile.yml
     dir: core
-  fe:
-    taskfile: fe/Taskfile.yml
-    dir: fe
+  frontend:
+    taskfile: frontend/Taskfile.yml
+    dir: frontend
   proto:
     taskfile: proto/Taskfile.yml
     dir: proto
 
 tasks:
   dev:
-    desc: Start core + fe in a zellij session
+    desc: Start core + frontend in a zellij session
     cmds:
       - task: dev:kill
       - defer: zellij attach dev
@@ -35,7 +35,7 @@ tasks:
       # core
       - pkill -f 'watchexec -w internal' || true
       - pkill -f '\.bin/main\.bin serve' || true
-      # fe
+      # frontend
       - pkill -f 'vite\.js dev --port 3000' || true
 
   gen-all:
@@ -54,16 +54,16 @@ tasks:
     desc: Generate TypeSpec, OpenAPI and proto files
     cmds:
       - protoforge run typespec openapi proto
-      - task: fe:orval
+      - task: frontend:orval
 
   lint:
-    desc: Lint core and fe
+    desc: Lint core and frontend
     cmds:
       - task: core:lint
-      - task: fe:lint
+      - task: frontend:lint
 
   build:
     desc: Build the frontend and embed it into the core binary
     cmds:
-      - task: fe:build
+      - task: frontend:build
       - task: core:build

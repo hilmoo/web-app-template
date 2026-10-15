@@ -1,5 +1,5 @@
 packages:
-  - fe
+  - frontend
   - migration
   - openapi
   - proto/gen/typescript

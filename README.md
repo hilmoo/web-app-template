@@ -11,7 +11,7 @@ migration/src/schema (drizzle)
    └─► openapi/src/_generated/db.tsp ─► openapi/openapi.json ─► proto/registry/*.proto
                                                                   └─► proto/gen/{go,typescript}  (buf generate)
 core/internal/db/sql ─► core/internal/gen/sqlc   (sqlc generate)
-openapi/openapi.json ─► fe/src/api/schemas       (orval, zod schemas for forms)
+openapi/openapi.json ─► frontend/src/api/schemas       (orval, zod schemas for forms)
 ```
 
 ## Layout
@@ -19,7 +19,7 @@ openapi/openapi.json ─► fe/src/api/schemas       (orval, zod schemas for for
 | Dir          | What                                                                 |
 | ------------ | -------------------------------------------------------------------- |
 | `core/`      | Go server: ConnectRPC handlers, sqlc queries, embedded SPA            |
-| `fe/`        | Vite + React + Mantine, `@connectrpc/connect-query`, TanStack Router |
+| `frontend/`        | Vite + React + Mantine, `@connectrpc/connect-query`, TanStack Router |
 | `migration/` | Drizzle schema (source of truth for tables)                          |
 | `openapi/`   | TypeSpec API definitions (`openapi.json` is generated)               |
 | `proto/`     | Generated `.proto` registry + generated Go / TypeScript clients      |
@@ -30,9 +30,9 @@ openapi/openapi.json ─► fe/src/api/schemas       (orval, zod schemas for for
 2. `scripts/rename.sh <your-app-name>` — replaces the `web-app-template` placeholder everywhere (Go module, DB name, package names).
 3. `cp .env.example .env`
 4. `task gen-all` — generates migrations, OpenAPI, proto and clients. Needs Postgres up (`push` step) and creates the first migration.
-5. `task core:gen-sql` — sqlc models. `task fe:orval` — zod schemas.
+5. `task core:gen-sql` — sqlc models. `task frontend:orval` — zod schemas.
 6. `task core:migrate-up`
-7. `task dev` — zellij session with core (`:8080`, serves `/api` and proxies Vite) and fe (`:3000`).
+7. `task dev` — zellij session with core (`:8080`, serves `/api` and proxies Vite) and frontend (`:3000`).
 
 Open <http://localhost:8080>.
 
@@ -42,6 +42,6 @@ Open <http://localhost:8080>.
 2. Add `openapi/src/<name>/{main,model}.tsp` (copy `todos/`) and import it in `openapi/src/main.tsp`.
 3. `task gen-all`, then write `core/internal/db/sql/<name>.sql` and `task core:gen-sql`.
 4. Implement `core/internal/features/<name>` (handler/service/helper, see `todo`) and register it in `core/internal/app/handler.go`.
-5. Add `fe/src/features/<name>` hooks using `useQuery(Service.method.x)` / `useMutation(...)` and a route in `fe/src/routes`.
+5. Add `frontend/src/features/<name>` hooks using `useQuery(Service.method.x)` / `useMutation(...)` and a route in `frontend/src/routes`.
 
 Procedures require authentication by default; opt out per procedure via an `AccessPolicy` (see `features/auth/access.go`).

@@ -24,10 +24,10 @@ tasks:
       DATA_DIR: "../data"
 
   build:
-    desc: Build the production binary (run `task fe:build` first, then copy fe/dist into internal/app/dist)
+    desc: Build the production binary (run `task frontend:build` first, then copy frontend/dist into internal/app/dist)
     cmds:
       - rm -rf internal/app/dist
-      - cp -r ../fe/dist internal/app/dist
+      - cp -r ../frontend/dist internal/app/dist
       - go build -o ./.bin/main.bin ./cmd
 
   lint:

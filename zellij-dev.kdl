@@ -14,9 +14,9 @@ layout {
             args "core"
         }
     }
-    tab name="fe" {
+    tab name="frontend" {
         pane command="task" start_suspended=false {
-            args "fe"
+            args "frontend"
         }
     }
 }
