@@ -26,13 +26,19 @@ openapi/openapi.json ─► frontend/src/api/schemas       (orval, zod schemas f
 
 ## Getting started
 
+0. Scaffold a new project from this template. This also replaces the `web-app-template` placeholder everywhere (Go module, DB name, package names) and removes the rename script:
+   ```bash
+   npx degit hilmoo/web-app-template my-new-app
+   cd my-new-app
+   scripts/rename.sh my-new-app && rm -rf scripts
+   git init && git add -A && git commit -m "init"
+   ```
 1. Open in the devcontainer (installs devbox, pnpm deps, protoforge). Or run `devbox shell` + `pnpm install`.
-2. `scripts/rename.sh <your-app-name>` — replaces the `web-app-template` placeholder everywhere (Go module, DB name, package names).
-3. `cp .env.example .env`
-4. `task gen-all` — generates migrations, OpenAPI, proto and clients. Needs Postgres up (`push` step) and creates the first migration.
-5. `task core:gen-sql` — sqlc models. `task frontend:orval` — zod schemas.
-6. `task core:migrate-up`
-7. `task dev` — zellij session with core (`:8080`, serves `/api` and proxies Vite) and frontend (`:3000`).
+2. `cp .env.example .env`
+3. `task gen-all` — generates migrations, OpenAPI, proto and clients. Needs Postgres up (`push` step) and creates the first migration.
+4. `task core:gen-sql` — sqlc models. `task frontend:orval` — zod schemas.
+5. `task core:migrate-up`
+6. `task dev` — zellij session with core (`:8080`, serves `/api` and proxies Vite) and frontend (`:3000`).
 
 Open <http://localhost:8080>.
 
