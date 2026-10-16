@@ -58,7 +58,6 @@
 	},
 	"remoteUser": "vscode",
 	"postCreateCommand": ".devcontainer/post-create.sh",
-	"postStartCommand": "nohup bash .devcontainer/idle-shutdown.sh > /dev/null 2>&1 &",
 	"forwardPorts": [
 		5432, // postgres
 		8080, // core (serves the API under /api and the frontend)
