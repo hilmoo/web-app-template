@@ -1,1 +1,14 @@
 * text=auto eol=lf
+
+# Generated code: collapsed in GitHub diffs and excluded from language stats.
+core/internal/gen/** linguist-generated=true
+proto/gen/** linguist-generated=true
+proto/registry/** linguist-generated=true
+openapi/openapi.json linguist-generated=true
+openapi/src/_generated/** linguist-generated=true
+frontend/src/api/** linguist-generated=true
+frontend/src/routeTree.gen.ts linguist-generated=true
+migration/schema.dbml linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+devbox.lock linguist-generated=true
+go.work.sum linguist-generated=true
