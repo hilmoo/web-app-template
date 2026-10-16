@@ -32,11 +32,7 @@ tasks:
     ignore_error: true
     cmds:
       - zellij delete-session dev --force
-      # core
-      - pkill -f 'watchexec -w internal' || true
-      - pkill -f '\.bin/main\.bin serve' || true
-      # frontend
-      - pkill -f 'vite\.js dev --port 3000' || true
+      - ./scripts/kill-orphans.sh
 
   gen-all:
     desc: Generate everything (migration -> typespec -> openapi -> proto -> codegen)

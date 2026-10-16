@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  lint:
+    desc: Run linters
+    cmds:
+      - pnpm exec oxlint --fix
+
+  lint:check:
+    desc: Lint without modifying files
+    cmds:
+      - pnpm exec oxlint
+
+  fmt:
+    desc: Run formatters
+    cmds:
+      - pnpm exec oxfmt
+
+  fmt:check:
+    desc: Check formatting without modifying files
+    cmds:
+      - pnpm exec oxfmt --check

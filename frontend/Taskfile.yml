@@ -2,6 +2,12 @@
 
 version: "3"
 
+includes:
+  node-common:
+    taskfile: ../.taskfile/node-common.yml
+    flatten: true
+    dir: .
+
 tasks:
   default:
     desc: Start the development server
@@ -12,31 +18,6 @@ tasks:
     desc: Production build into dist/
     cmds:
       - pnpm build
-
-  typecheck:
-    desc: Type-check the project
-    cmds:
-      - pnpm typecheck
-
-  lint:
-    desc: Run linters
-    cmds:
-      - pnpm exec oxlint --fix
-
-  lint:check:
-    desc: Lint without modifying files
-    cmds:
-      - pnpm exec oxlint
-
-  fmt:
-    desc: Run formatters
-    cmds:
-      - pnpm exec oxfmt
-
-  fmt:check:
-    desc: Check formatting without modifying files
-    cmds:
-      - pnpm exec oxfmt --check
 
   orval:
     desc: Generate zod schemas from the OpenAPI document using Orval

@@ -203,19 +203,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@typespec/compiler':
-      specifier: ^1.15.0
-      version: 1.17.0
-
 importers:
 
   .:
     devDependencies:
-      '@typespec/compiler':
-        specifier: 'catalog:'
-        version: 1.17.0(@types/node@26.6.5)
       oxfmt:
         specifier: ^0.65.0
         version: 0.65.0
@@ -345,7 +336,7 @@ importers:
   openapi:
     dependencies:
       '@typespec/compiler':
-        specifier: 'catalog:'
+        specifier: ^1.16.0
         version: 1.17.0(@types/node@26.6.5)
       '@typespec/http':
         specifier: ^1.16.0

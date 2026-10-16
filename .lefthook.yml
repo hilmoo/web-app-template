@@ -1,8 +1,5 @@
 # yaml-language-server: $schema=https://lefthook.dev/schema.json
 #
-# Local git hooks. They mirror .github/workflows/ci.yml, so if GitHub Actions is
-# unavailable you can delete the workflow and rely on these.
-# Installed automatically by `pnpm install` (root "prepare" script), or run `pnpm exec lefthook install`.
 # Skip once with `git commit --no-verify` / `git push --no-verify` or LEFTHOOK=0.
 
 pre-commit:
@@ -22,9 +19,3 @@ pre-commit:
       glob: "{frontend,migration}/**/*.{ts,tsx,json}"
       exclude: "**/*.gen.ts"
       run: pnpm exec oxfmt --check {staged_files}
-
-# Runs the same checks as CI: lint, format, typecheck, unit tests and production build.
-pre-push:
-  jobs:
-    - name: check
-      run: task check

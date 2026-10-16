@@ -7,7 +7,7 @@
 		"vscode": {
 			"settings": {
 				"json.schemaDownload.trustedDomains": {
-					"https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json": true
+					"https://raw.githubusercontent.com/jetify-com/devbox/": true
 				},
 				"go.lintTool": "golangci-lint-v2",
 				"go.lintFlags": [
@@ -16,7 +16,8 @@
 				],
 				"go.formatTool": "custom",
 				"go.alternateTools": {
-					"customFormatter": "golangci-lint-v2"
+					"customFormatter": "golangci-lint-v2",
+					"golangci-lint-v2": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/golangci-lint"
 				},
 				"go.formatFlags": [
 					"fmt",

@@ -3,7 +3,7 @@ services:
     image: ghcr.io/hilmoo/containers/my-devcontainer:2026.10.16
     volumes:
       - ../..:/workspaces:cached
-      - shared-nix-2.35:/nix
+      - shared-nix-my-devcontainer-2026.10.16:/nix
     command: sleep infinity
 
   db:
@@ -18,6 +18,6 @@ services:
 
 volumes:
   web-app-template-postgres:
-  shared-nix-2.35:
-    name: ${NIX_VOLUME_NAME:-shared-nix-2.35}
+  shared-nix-my-devcontainer-2026.10.16:
+    name: ${NIX_VOLUME_NAME:-shared-nix-my-devcontainer-2026.10.16}
     external: true

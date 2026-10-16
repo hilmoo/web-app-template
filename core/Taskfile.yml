@@ -35,15 +35,19 @@ tasks:
     cmds:
       - golangci-lint run --fix
 
+  lint:check:
+    desc: Lint without modifying files
+    cmds:
+      - golangci-lint run
+
   fmt:
     desc: Format Go code
     cmds:
       - golangci-lint fmt
 
-  lint:check:
-    desc: Lint and check formatting without modifying files
+  fmt:check:
+    desc: Check formatting without modifying files
     cmds:
-      - golangci-lint run
       - golangci-lint fmt --diff
 
   gen:
