@@ -1,5 +1,3 @@
 /.bin/
 /internal/app/bin
-/result
-/payloads
-/.env
+/coverage.out

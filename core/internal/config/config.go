@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"strconv"
@@ -49,5 +50,31 @@ func LoadConfig() (Config, error) {
 
 	c.IsProd = c.AppEnv == "production"
 
+	if c.IsProd {
+		if err = validateProdSecrets(c); err != nil {
+			return c, err
+		}
+	}
+
 	return c, nil
+}
+
+// minProdSecretLen is the shortest SECRET / SERVICE_SECRET accepted in production.
+const minProdSecretLen = 32
+
+// validateProdSecrets rejects the placeholder values from .env.example and short secrets.
+func validateProdSecrets(c Config) error {
+	secrets := map[string]string{"SECRET": c.Secret, "SERVICE_SECRET": c.ServiceSecret}
+	for name, value := range secrets {
+		if value == "supersecret" || len(value) < minProdSecretLen {
+			return fmt.Errorf(
+				"%s must be at least %d characters and not the .env.example placeholder when APP_ENV=production",
+				name, minProdSecretLen,
+			)
+		}
+	}
+	if c.Secret == c.ServiceSecret {
+		return errors.New("SECRET and SERVICE_SECRET must differ when APP_ENV=production")
+	}
+	return nil
 }

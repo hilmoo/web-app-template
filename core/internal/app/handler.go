@@ -10,7 +10,6 @@ import (
 
 	"web-app-template-core/internal/features/auth"
 	"web-app-template-core/internal/features/health"
-	"web-app-template-core/internal/features/todo"
 	"web-app-template-core/internal/helper"
 
 	"connectrpc.com/connect"
@@ -71,7 +70,6 @@ func RegisterConnect(handleArg helper.HandlerParams, mux *http.ServeMux) []strin
 	}
 
 	register(servicesv1connect.NewAuthServiceHandler(auth.NewConnect(handleArg), opts...))
-	register(servicesv1connect.NewTodoServiceHandler(todo.NewConnect(handleArg), opts...))
 
 	reflector := grpcreflect.NewStaticReflector(serviceNames...)
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))

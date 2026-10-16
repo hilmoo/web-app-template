@@ -20,15 +20,6 @@ type Session struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type Todo struct {
-	ID          uuid.UUID `json:"id"`
-	Title       string    `json:"title"`
-	Description *string   `json:"description"`
-	Done        bool      `json:"done"`
-	OwnerID     uuid.UUID `json:"owner_id"`
-	CreatedAt   time.Time `json:"created_at"`
-}
-
 type User struct {
 	ID           uuid.UUID `json:"id"`
 	Email        string    `json:"email"`

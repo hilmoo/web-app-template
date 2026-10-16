@@ -24,7 +24,7 @@ tasks:
       DATA_DIR: "../data"
 
   build:
-    desc: Build the production binary (run `task frontend:build` first, then copy frontend/dist into internal/app/dist)
+    desc: Build the production binary, embedding frontend/dist (run `task frontend:build` first; the root `task build` does both)
     cmds:
       - rm -rf internal/app/dist
       - cp -r ../frontend/dist internal/app/dist
@@ -34,6 +34,17 @@ tasks:
     desc: Run linters
     cmds:
       - golangci-lint run --fix
+
+  fmt:
+    desc: Format Go code
+    cmds:
+      - golangci-lint fmt
+
+  lint:check:
+    desc: Lint and check formatting without modifying files
+    cmds:
+      - golangci-lint run
+      - golangci-lint fmt --diff
 
   gen:
     desc: Generate sqlc code
@@ -87,14 +98,15 @@ tasks:
     cmds:
       - go run {{.MAIN_GO}} migrate version
 
-  test-integration-all:
-    desc: Run integration tests
+  test:
+    desc: Run unit tests
     cmds:
-      - go test -v ./internal/features/... -tags=integration
+      - go test ./...
 
-  test-integration:*:
-    desc: Run integration tests
-    vars:
-      FEATURE: "{{index .MATCH 0}}"
+  # Integration tests: put them behind `//go:build integration` next to the code they test
+  # and run them with `go test -tags=integration ./...` (they need a running Postgres).
+
+  compile:
+    desc: Compile all packages without producing a binary or touching the embedded dist
     cmds:
-      - go test -v ./internal/features/{{.FEATURE}}/... -tags=integration
+      - go build ./...

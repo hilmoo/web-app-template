@@ -23,13 +23,28 @@ tasks:
     cmds:
       - pnpm exec oxlint --fix
 
+  lint:check:
+    desc: Lint without modifying files
+    cmds:
+      - pnpm exec oxlint
+
   fmt:
     desc: Run formatters
     cmds:
       - pnpm exec oxfmt
+
+  fmt:check:
+    desc: Check formatting without modifying files
+    cmds:
+      - pnpm exec oxfmt --check
 
   orval:
     desc: Generate zod schemas from the OpenAPI document using Orval
     cmds:
       - rm -rf src/api
       - pnpm exec orval
+
+  test:
+    desc: Run unit tests (vitest)
+    cmds:
+      - pnpm test
