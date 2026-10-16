@@ -13,19 +13,6 @@ Table "sessions" {
   }
 }
 
-Table "todos" {
-  "id" uuid [primary key, not null, default: `gen_random_uuid()`, note: 'Unique identifier.']
-  "title" text [not null, note: 'Short title of the todo.']
-  "description" text [note: 'Optional longer description.']
-  "done" boolean [not null, default: false, note: 'Whether the todo has been completed.']
-  "owner_id" uuid [not null, note: 'ID of the user who owns the todo.']
-  "created_at" timestamptz [not null, default: `now()`, note: 'When it was created.']
-
-  indexes {
-    ("owner_id") [name: 'idx_todos_owner_id']
-  }
-}
-
 Table "users" {
   "id" uuid [primary key, not null, default: `gen_random_uuid()`, note: 'Unique identifier.']
   "email" text [not null, unique, note: 'Email address of the user.']
@@ -35,4 +22,3 @@ Table "users" {
 }
 
 Ref: "sessions"."user_id" > "users"."id" [delete: cascade]
-Ref: "todos"."owner_id" > "users"."id" [delete: cascade]

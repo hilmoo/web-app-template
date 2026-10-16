@@ -22,3 +22,13 @@ tasks:
     desc: Run Drizzle ORM migrations
     cmds:
       - pnpm db:migrate
+
+  lint:check:
+    desc: Lint without modifying files
+    cmds:
+      - pnpm exec oxlint
+
+  fmt:check:
+    desc: Check formatting without modifying files
+    cmds:
+      - pnpm exec oxfmt --check

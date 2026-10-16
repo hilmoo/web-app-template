@@ -38,33 +38,6 @@ model SessionRow {
   createdAt: utcDateTime;
 }
 
-@doc("Database table `todos`.")
-model TodoRow {
-  @doc("Unique identifier.")
-  @format("uuid")
-  @visibility(Lifecycle.Read, Lifecycle.Delete)
-  id: string;
-
-  @doc("Short title of the todo.")
-  @example("Buy milk")
-  title: string;
-
-  @doc("Optional longer description.")
-  description?: string;
-
-  @doc("Whether the todo has been completed.")
-  done: boolean;
-
-  @doc("ID of the user who owns the todo.")
-  @format("uuid")
-  @removeVisibility(Lifecycle.Update)
-  ownerId: string;
-
-  @doc("When it was created.")
-  @visibility(Lifecycle.Read, Lifecycle.Delete)
-  createdAt: utcDateTime;
-}
-
 @doc("Database table `users`.")
 model UserRow {
   @doc("Unique identifier.")

@@ -3,7 +3,6 @@ import "@typespec/openapi";
 import "@typespec/openapi3";
 
 import "./auth";
-import "./todos";
 
 using TypeSpec.Http;
 using TypeSpec.OpenAPI;
