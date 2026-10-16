@@ -1,6 +1,6 @@
 services:
   workspace:
-    image: ghcr.io/hilmoo/containers/my-devcontainer:v0.7.1
+    image: ghcr.io/hilmoo/containers/my-devcontainer:2026.10.16
     volumes:
       - ../..:/workspaces:cached
       - shared-nix-2.35:/nix

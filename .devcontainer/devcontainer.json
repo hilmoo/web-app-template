@@ -46,13 +46,11 @@
 				"stoplight.spectral",
 				"task.vscode-task",
 				"42Crunch.vscode-openapi",
-				"tamasfe.even-better-toml",
 				"typespec.typespec-vscode",
 				"dbdiagram.dbdiagram-vscode",
 				"oxc.oxc-vscode",
 				"Anthropic.claude-code",
-				"bufbuild.vscode-buf",
-				"charliermarsh.ruff"
+				"bufbuild.vscode-buf"
 			]
 		}
 	},

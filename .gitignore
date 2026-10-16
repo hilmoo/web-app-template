@@ -1,8 +1,27 @@
+# Environment (keep .env.example tracked)
 .env
+.env.*
+!.env.example
+
+# Dependencies
 node_modules/
-.ruff_cache/
+
+# Caches, coverage, logs (per-package build output is ignored in each package)
+coverage/
+*.tsbuildinfo
+*.log
+.DS_Store
+
+# Editors
+.idea/
 
 # protoforge
 openapi/src/@typespec/
 proto/.tmp/
 node_modules/.cache/protoforge/
+
+# Generated from proto/gen/typescript/src by `pnpm --filter proto build` (task proto:build-typescript)
+proto/gen/typescript/dist/
+proto/gen/typescript/index.js
+proto/gen/typescript/index.d.ts
+proto/gen/typescript/namespaces/

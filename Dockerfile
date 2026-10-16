@@ -20,10 +20,10 @@ COPY proto/gen/typescript/package.json proto/gen/typescript/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     pnpm install --frozen-lockfile --filter frontend...
 
-# Generated proto TS package (committed) and the frontend sources.
+# Generated proto TS sources (committed); dist/ is built here, then the frontend sources.
 COPY proto/gen/typescript proto/gen/typescript
 COPY frontend frontend
-RUN pnpm --filter frontend build
+RUN pnpm --filter proto build && pnpm --filter frontend build
 
 # ---- Backend build: embeds the frontend (core/internal/app/frontend.go) ----
 FROM golang:${GO_VERSION} AS core

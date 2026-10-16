@@ -1,3 +1,5 @@
+# The same checks run locally via lefthook (`task check` on pre-push), see lefthook.yml.
+# If GitHub Actions is unavailable for a project, delete this file and rely on lefthook.
 name: CI
 
 on:
@@ -14,7 +16,7 @@ permissions:
 
 jobs:
   go:
-    name: Go lint & format
+    name: Go (lint, format, sqlc, test, build)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -26,12 +28,6 @@ jobs:
             core/go.sum
             proto/gen/go/go.sum
 
-      # core embeds internal/app/dist; make sure the directory is non-empty
-      - name: Ensure embedded dist exists
-        run: |
-          mkdir -p core/internal/app/dist
-          [ -n "$(ls -A core/internal/app/dist)" ] || touch core/internal/app/dist/.gitkeep
-
       - name: Lint (golangci-lint)
         uses: golangci/golangci-lint-action@v8
         with:
@@ -41,6 +37,23 @@ jobs:
       - name: Check formatting (golangci-lint fmt)
         working-directory: core
         run: golangci-lint fmt --diff
+
+      # Fails if core/internal/gen/sqlc is out of date with core/internal/db/sql.
+      - uses: sqlc-dev/setup-sqlc@v4
+        with:
+          sqlc-version: 1.31.1
+
+      - name: Check sqlc generated code
+        working-directory: core
+        run: sqlc diff
+
+      - name: Test
+        working-directory: core
+        run: go test ./...
+
+      - name: Build
+        working-directory: core
+        run: go build ./...
 
   ts:
     name: TypeScript lint & format (${{ matrix.package }})
@@ -65,3 +78,38 @@ jobs:
 
       - name: Check formatting (oxfmt)
         run: pnpm exec oxfmt --check
+
+  frontend:
+    name: Frontend (typecheck, test, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v3
+
+      - run: pnpm install --frozen-lockfile
+
+      # proto/gen/typescript/dist is generated, not committed.
+      - name: Build proto package
+        run: pnpm --filter proto build
+
+      - name: Typecheck
+        working-directory: frontend
+        run: pnpm typecheck
+
+      - name: Test
+        working-directory: frontend
+        run: pnpm test
+
+      - name: Build
+        working-directory: frontend
+        run: pnpm build
+
+  docker:
+    name: Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build image
+        run: docker build .

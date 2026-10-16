@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Kill any process listening on the given ports.
-# Usage: ./kill_ports.sh            (defaults: 8080 3000)
-#        ./kill_ports.sh 3000 5000  (custom ports)
+# Usage: .vscode/kill.sh            (defaults: 8080 3000)
+#        .vscode/kill.sh 3000 5000  (custom ports)
 
 PORTS=("${@:-8080 3000}")
 # Split the default string into separate ports if no args were given

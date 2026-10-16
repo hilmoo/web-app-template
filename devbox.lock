@@ -119,41 +119,41 @@
         }
       }
     },
-    "grpcurl@1.9.4": {
-      "last_modified": "2026-10-02T22:55:44Z",
-      "resolved": "github:NixOS/nixpkgs/55ba7f49ef2962b42cbd126522b7df5f95037679#grpcurl",
+    "lefthook@2.1.15": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#lefthook",
       "source": "devbox-search",
-      "version": "1.9.4",
+      "version": "2.1.15",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/r6xw1fz6jj56nxk49b5wk8mqcvnlqdan-grpcurl-1.9.4",
+              "path": "/nix/store/g4ri1myycrhw2fw1qrfjw5s9yi9nyic8-lefthook-2.1.15",
               "default": true
             }
           ],
-          "store_path": "/nix/store/r6xw1fz6jj56nxk49b5wk8mqcvnlqdan-grpcurl-1.9.4"
+          "store_path": "/nix/store/g4ri1myycrhw2fw1qrfjw5s9yi9nyic8-lefthook-2.1.15"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/mgacwjpvrl4ziimm6jpqx36bgwz3wp30-grpcurl-1.9.4",
+              "path": "/nix/store/lik0zrr8azb8n52sl9kwkcpr64x5cl3m-lefthook-2.1.15",
               "default": true
             }
           ],
-          "store_path": "/nix/store/mgacwjpvrl4ziimm6jpqx36bgwz3wp30-grpcurl-1.9.4"
+          "store_path": "/nix/store/lik0zrr8azb8n52sl9kwkcpr64x5cl3m-lefthook-2.1.15"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/zz7x9gsxzfkwfqhv1nyhcap0dnxbhsd7-grpcurl-1.9.4",
+              "path": "/nix/store/xzbb7piaki12flx6mfknpz0nb9jv707p-lefthook-2.1.15",
               "default": true
             }
           ],
-          "store_path": "/nix/store/zz7x9gsxzfkwfqhv1nyhcap0dnxbhsd7-grpcurl-1.9.4"
+          "store_path": "/nix/store/xzbb7piaki12flx6mfknpz0nb9jv707p-lefthook-2.1.15"
         }
       }
     },
