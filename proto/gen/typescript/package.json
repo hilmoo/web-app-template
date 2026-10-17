@@ -29,11 +29,11 @@
     "@connectrpc/validate": "^0.2.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^29.0.2",
+    "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "rollup": "^4.60.0",
-    "rollup-plugin-dts": "^6.4.1",
-    "typescript": "^6.0.2"
+    "rollup": "^4.64.6",
+    "rollup-plugin-dts": "^6.5.1",
+    "typescript": "^6.0.3"
   },
   "private": true
 }
