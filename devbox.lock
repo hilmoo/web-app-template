@@ -119,7 +119,7 @@
         }
       }
     },
-    "gopls@latest": {
+    "gopls@0.23.0": {
       "last_modified": "2026-10-14T08:20:44Z",
       "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#gopls",
       "source": "devbox-search",
@@ -914,41 +914,41 @@
         }
       }
     },
-    "zellij@0.45.0": {
-      "last_modified": "2026-08-27T07:16:00Z",
-      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#zellij",
+    "zellij@0.45.1": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#zellij",
       "source": "devbox-search",
-      "version": "0.45.0",
+      "version": "0.45.1",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/8lmhmk16b18jp22v6874vpfb3j1g8hgb-zellij-0.45.0",
+              "path": "/nix/store/az99g3g3b5rhrgywb51yq886xb19ywnk-zellij-0.45.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/8lmhmk16b18jp22v6874vpfb3j1g8hgb-zellij-0.45.0"
+          "store_path": "/nix/store/az99g3g3b5rhrgywb51yq886xb19ywnk-zellij-0.45.1"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/vn8i8w2ls43w5kkkflh6lyx2xcxwp22b-zellij-0.45.0",
+              "path": "/nix/store/nq7kisix9jn9g33fld46lkrjcw30ahln-zellij-0.45.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/vn8i8w2ls43w5kkkflh6lyx2xcxwp22b-zellij-0.45.0"
+          "store_path": "/nix/store/nq7kisix9jn9g33fld46lkrjcw30ahln-zellij-0.45.1"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/mgzjlpnp30509n93iyzjm1jnxqdd7lyq-zellij-0.45.0",
+              "path": "/nix/store/maky1dnc97q772f9krm6xhqbpr5cyvfl-zellij-0.45.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/mgzjlpnp30509n93iyzjm1jnxqdd7lyq-zellij-0.45.0"
+          "store_path": "/nix/store/maky1dnc97q772f9krm6xhqbpr5cyvfl-zellij-0.45.1"
         }
       }
     }
