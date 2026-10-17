@@ -38,7 +38,7 @@
       "customType": "regex",
       "description": "Go version in go.work (go.mod `go` directives are handled by the gomod manager)",
       "managerFilePatterns": ["/(^|/)go\\.work$/"],
-      "matchStrings": ["^go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\s*$"],
+      "matchStrings": ["(?m)^go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\s*$"],
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version",
       "versioningTemplate": "semver-coerced"
