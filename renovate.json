@@ -74,6 +74,13 @@
     },
     {
       "customType": "regex",
+      "description": "oxlint / oxfmt / tsgolint versions pinned in the CI workflow (keep in sync with devbox.jsonc)",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": ["(?:pnpm dlx|--package) (?<depName>oxlint-tsgolint|oxlint|oxfmt)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
       "description": "Devcontainer image tag baked into the nix volume names in compose.yaml (the image line itself is handled by docker-compose)",
       "managerFilePatterns": ["/(^|/)\\.devcontainer/compose\\.ya?ml$/"],
       "matchStrings": ["shared-nix-my-devcontainer-(?<currentValue>\\d{4}\\.\\d{2}\\.\\d{2})"],
@@ -140,6 +147,7 @@
         "oxlint",
         "oxfmt",
         "tsgolint",
+        "oxlint-tsgolint",
         "golangci-lint",
         "golangci/golangci-lint"
       ],

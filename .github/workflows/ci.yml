@@ -73,11 +73,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: .
 
+      # oxlint/oxfmt are installed via devbox locally, not as package deps.
+      # Versions are pinned to match devbox.jsonc (renovate keeps them in sync).
+      # tsgolint powers type-aware rules (e.g. typescript/no-deprecated) and is found on PATH.
       - name: Lint (oxlint)
-        run: pnpm exec oxlint
+        run: pnpm dlx --package oxlint@1.86.0 --package oxlint-tsgolint@7.0.2003 oxlint
 
       - name: Check formatting (oxfmt)
-        run: pnpm exec oxfmt --check
+        run: pnpm dlx oxfmt@0.68.0 --check
 
   frontend:
     name: Frontend (typecheck, test, build)

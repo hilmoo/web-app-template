@@ -20,7 +20,7 @@ export function useMe() {
 
 export async function fetchMe(queryClient: QueryClient, transport: Transport) {
   try {
-    const res = await queryClient.fetchQuery({
+    const res = await queryClient.query({
       ...createQueryOptions(authMe, {}, { transport }),
       staleTime: 30_000,
     });

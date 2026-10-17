@@ -11,5 +11,8 @@
   "rules": {},
   "env": {
     "builtin": true
+  },
+  "options": {
+    "typeAware": true
   }
 }

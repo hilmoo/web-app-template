@@ -30,4 +30,7 @@ PROTOFORGE_VERSION=0.0.1
 curl -L "https://github.com/hilmoo/protoforge/releases/download/v${PROTOFORGE_VERSION}/protoforge_${PROTOFORGE_VERSION}_linux_amd64.tar.gz" | tar -xz -C /tmp && sudo install -m 755 /tmp/protoforge /usr/local/bin/protoforge
 
 direnv reload
+
 perl -0pi -e 's/,(\s*[}\]])/$1/g' devbox.jsonc
+
+add_to_zshrc 'eval "$(task --completion zsh)"'
