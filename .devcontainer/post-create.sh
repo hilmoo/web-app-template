@@ -14,12 +14,6 @@ command -v devbox >/dev/null || {
 add_to_zshrc 'eval "$(devbox global shellenv)"'
 eval "$(devbox global shellenv)"
 
-command -v direnv >/dev/null || {
-  devbox global add direnv@2.37.1
-  eval "$(devbox global shellenv)"
-}
-add_to_zshrc 'eval "$(direnv hook zsh)"'
-
 direnv allow
 devbox install
 

@@ -82,15 +82,6 @@
     },
     {
       "customType": "regex",
-      "description": "Tools installed by .devcontainer/post-create.sh via devbox global",
-      "managerFilePatterns": ["/(^|/)\\.devcontainer/post-create\\.sh$/"],
-      "matchStrings": [
-        "devbox global add (?<depName>[\\w.-]+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "datasourceTemplate": "devbox"
-    },
-    {
-      "customType": "regex",
       "description": "protoforge release pinned in post-create.sh",
       "managerFilePatterns": ["/(^|/)\\.devcontainer/post-create\\.sh$/"],
       "matchStrings": ["PROTOFORGE_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s"],

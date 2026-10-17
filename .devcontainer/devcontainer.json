@@ -73,6 +73,10 @@
 				// -- API tooling --
 				"typespec.tsp-server.path": "${containerWorkspaceFolder}/openapi/node_modules/@typespec/compiler",
 				"buf.commandLine.path": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/buf",
+				// -- Taskfile --
+				"taskfile": {
+					"path": "/home/vscode/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/task"
+				},
 				// -- Generated files (hide from watcher/search, make read-only) --
 				"files.watcherExclude": {
 					"**/routeTree.gen.ts": true
