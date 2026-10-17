@@ -1,6 +1,6 @@
-go 1.27.0
+go 1.27.2
 
 use (
-    ./core
-    ./proto/gen/go
+	./core
+	./proto/gen/go
 )
