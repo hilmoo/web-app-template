@@ -2,8 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.18.4/.schema/devbox.schema.json",
   "packages": [
     // language runtimes
-    "go@1.27.0",
-    "nodejs@24.12.0",
+    "go@1.27.2",
+    "nodejs@24.21.0",
     "pnpm@12.9.0",
     // go tools
     "gopls@0.23.0",
