@@ -236,7 +236,7 @@ importers:
         specifier: 1.168.45
         version: 1.168.45(@tanstack/react-router@1.170.44(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(esbuild@0.28.2)(rolldown@1.2.14)(rollup@4.64.7)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
       '@types/node':
-        specifier: ^24.0.0
+        specifier: ^24.19.2
         version: 24.19.2
       '@types/react':
         specifier: ^19.3.0
@@ -267,7 +267,7 @@ importers:
         version: 8.23.1
     devDependencies:
       '@types/node':
-        specifier: ^26.2.0
+        specifier: ^26.6.5
         version: 26.6.5
       '@types/pg':
         specifier: ^8.23.1
