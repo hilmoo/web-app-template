@@ -23,18 +23,22 @@
     "npm",
     "gomod",
     "devbox",
+    "dockerfile",
     "docker-compose",
     "devcontainer",
     "github-actions",
     "custom.regex"
   ],
   "postUpdateOptions": ["gomodTidy", "pnpmDedupe"],
+  "devbox": {
+    "managerFilePatterns": ["/(^|/)devbox\\.jsonc?$/"]
+  },
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Go version in go.work",
+      "description": "Go version in go.work (go.mod `go` directives are handled by the gomod manager)",
       "managerFilePatterns": ["/(^|/)go\\.work$/"],
-      "matchStrings": ["(?m)^go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\s*$"],
+      "matchStrings": ["^go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\s*$"],
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version",
       "versioningTemplate": "semver-coerced"
@@ -48,6 +52,57 @@
         "golangci-lint/v2/cmd/golangci-lint@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
       ],
       "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "pnpm version pinned in the Dockerfile (keep in sync with devbox.jsonc)",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": ["ARG PNPM_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s"],
+      "depNameTemplate": "pnpm",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "sqlc version pinned in the CI workflow (keep in sync with devbox.jsonc)",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": ["sqlc-version: (?<currentValue>\\d+\\.\\d+\\.\\d+)\\s"],
+      "depNameTemplate": "sqlc",
+      "packageNameTemplate": "sqlc-dev/sqlc",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Devcontainer image tag baked into the nix volume names in compose.yaml (the image line itself is handled by docker-compose)",
+      "managerFilePatterns": ["/(^|/)\\.devcontainer/compose\\.ya?ml$/"],
+      "matchStrings": ["shared-nix-my-devcontainer-(?<currentValue>\\d{4}\\.\\d{2}\\.\\d{2})"],
+      "depNameTemplate": "ghcr.io/hilmoo/containers/my-devcontainer",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Tools installed by .devcontainer/post-create.sh via devbox global",
+      "managerFilePatterns": ["/(^|/)\\.devcontainer/post-create\\.sh$/"],
+      "matchStrings": [
+        "devbox global add (?<depName>[\\w.-]+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "devbox"
+    },
+    {
+      "customType": "regex",
+      "description": "protoforge release pinned in post-create.sh",
+      "managerFilePatterns": ["/(^|/)\\.devcontainer/post-create\\.sh$/"],
+      "matchStrings": ["PROTOFORGE_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s"],
+      "depNameTemplate": "hilmoo/protoforge",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "devbox version referenced by the devbox.jsonc $schema URL",
+      "managerFilePatterns": ["/(^|/)devbox\\.jsonc?$/"],
+      "matchStrings": ["jetify-com/devbox/(?<currentValue>\\d+\\.\\d+\\.\\d+)/"],
+      "depNameTemplate": "jetify-com/devbox",
       "datasourceTemplate": "github-releases"
     }
   ],
@@ -90,15 +145,22 @@
     },
     {
       "description": "Keep linters / formatters in one PR",
-      "matchPackageNames": ["oxlint", "oxfmt", "golangci-lint", "golangci/golangci-lint"],
+      "matchPackageNames": [
+        "oxlint",
+        "oxfmt",
+        "tsgolint",
+        "golangci-lint",
+        "golangci/golangci-lint"
+      ],
       "groupName": "lint & format tooling"
     },
     {
       "description": "Keep protobuf / connect / buf codegen tools and runtimes together",
       "matchPackageNames": [
+        "protobuf",
+        "buf",
         "/^buf/",
-        "/protobuf/",
-        "/protoc-gen/",
+        "/^protoc-/",
         "/^@bufbuild\\//",
         "/^@connectrpc\\//",
         "/^connectrpc\\.com\\//",
@@ -108,13 +170,39 @@
     },
     {
       "description": "Keep OpenAPI / TypeSpec / orval tooling together",
-      "matchPackageNames": ["/^@typespec\\//", "/^orval/", "/openapi-generator/"],
+      "matchPackageNames": ["/^@typespec\\//", "/^orval/", "/^openapi-/"],
       "groupName": "openapi tooling"
     },
     {
       "description": "Keep drizzle packages together",
       "matchPackageNames": ["/^drizzle-/"],
       "groupName": "drizzle"
+    },
+    {
+      "description": "Dev container image + its nix volume names must change together",
+      "matchPackageNames": ["ghcr.io/hilmoo/containers/my-devcontainer"],
+      "groupName": "dev containers",
+      "automerge": false
+    },
+    {
+      "description": "sqlc is pinned in devbox.jsonc and the CI workflow: one PR",
+      "matchPackageNames": ["sqlc", "sqlc-dev/sqlc"],
+      "groupName": "sqlc"
+    },
+    {
+      "description": "Keep TanStack packages together (several are pinned exactly)",
+      "matchPackageNames": ["/^@tanstack\\//"],
+      "groupName": "tanstack"
+    },
+    {
+      "description": "Keep Mantine packages together",
+      "matchPackageNames": ["/^@mantine\\//"],
+      "groupName": "mantine"
+    },
+    {
+      "description": "Keep React and its types together",
+      "matchPackageNames": ["react", "react-dom", "/^@types\\/react/"],
+      "groupName": "react"
     },
     {
       "description": "Major updates: separate PRs, never automerged, labelled",
@@ -125,7 +213,7 @@
     },
     {
       "description": "Runtime/toolchain versions (Go, Node, pnpm) need a human look",
-      "matchPackageNames": ["go", "golang", "nodejs", "node", "pnpm"],
+      "matchPackageNames": ["go", "golang", "nodejs", "node", "pnpm", "@types/node"],
       "automerge": false,
       "groupName": "toolchain versions"
     },
