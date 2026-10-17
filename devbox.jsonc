@@ -24,7 +24,7 @@
     "buf@1.72.0",
     // other tools
     "pgformatter@5.10",
-    "openapi-generator-cli@7.25.0",
+    "openapi-generator-cli@7.26.0",
     "watchexec@2.5.1",
     "zellij@0.45.1",
     "lefthook@2.1.15"
