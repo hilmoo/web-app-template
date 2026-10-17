@@ -73,6 +73,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: .
 
+      # Type-aware lint resolves `proto/*` imports from the generated dist, which isn't committed.
+      - name: Build proto package
+        run: pnpm --filter proto build
+        working-directory: .
+
       # oxlint/oxfmt are installed via devbox locally, not as package deps.
       # Versions are pinned to match devbox.jsonc (renovate keeps them in sync).
       # tsgolint powers type-aware rules (e.g. typescript/no-deprecated) and is found on PATH.
