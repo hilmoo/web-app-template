@@ -276,41 +276,41 @@
         }
       }
     },
-    "openapi-generator-cli@7.25.0": {
-      "last_modified": "2026-10-02T22:55:44Z",
-      "resolved": "github:NixOS/nixpkgs/55ba7f49ef2962b42cbd126522b7df5f95037679#openapi-generator-cli",
+    "openapi-generator-cli@7.26.0": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#openapi-generator-cli",
       "source": "devbox-search",
-      "version": "7.25.0",
+      "version": "7.26.0",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/wgrcxr91hk2f2cjshfha8c56mfwbmgla-openapi-generator-cli-7.25.0",
+              "path": "/nix/store/rq3wckbh5dzg2ghwy71jds4z1nrbn1pw-openapi-generator-cli-7.26.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/wgrcxr91hk2f2cjshfha8c56mfwbmgla-openapi-generator-cli-7.25.0"
+          "store_path": "/nix/store/rq3wckbh5dzg2ghwy71jds4z1nrbn1pw-openapi-generator-cli-7.26.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/lfcrs3lbx7hqi1sgnlmcm9bv1bmd77i8-openapi-generator-cli-7.25.0",
+              "path": "/nix/store/8c54yykc0vghvnmcliwqx2cn5jfv7fvh-openapi-generator-cli-7.26.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/lfcrs3lbx7hqi1sgnlmcm9bv1bmd77i8-openapi-generator-cli-7.25.0"
+          "store_path": "/nix/store/8c54yykc0vghvnmcliwqx2cn5jfv7fvh-openapi-generator-cli-7.26.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/a0a2nvvxx36lzp4b0cs3fbfxphhfdjc8-openapi-generator-cli-7.25.0",
+              "path": "/nix/store/vxmhjd8l1va7kk1792142cw79fgmrrkb-openapi-generator-cli-7.26.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/a0a2nvvxx36lzp4b0cs3fbfxphhfdjc8-openapi-generator-cli-7.25.0"
+          "store_path": "/nix/store/vxmhjd8l1va7kk1792142cw79fgmrrkb-openapi-generator-cli-7.26.0"
         }
       }
     },
