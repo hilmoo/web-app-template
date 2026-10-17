@@ -438,41 +438,41 @@
         }
       }
     },
-    "pnpm@11.22.0": {
-      "last_modified": "2026-08-27T07:16:00Z",
-      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#pnpm",
+    "pnpm@12.9.0": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#pnpm",
       "source": "devbox-search",
-      "version": "11.22.0",
+      "version": "12.9.0",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/z0rlx5672gdlfb3830irk026yfwz8kyp-pnpm-11.22.0",
+              "path": "/nix/store/6vnrsxp5zmq5chqqvrflhsk3dw9w941s-pnpm-12.9.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/z0rlx5672gdlfb3830irk026yfwz8kyp-pnpm-11.22.0"
+          "store_path": "/nix/store/6vnrsxp5zmq5chqqvrflhsk3dw9w941s-pnpm-12.9.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/ym3qz78cr56fcc28v3d6paxnjs9v5gqw-pnpm-11.22.0",
+              "path": "/nix/store/4cgvir2rfw19yvni23j747rgkn98p3dm-pnpm-12.9.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/ym3qz78cr56fcc28v3d6paxnjs9v5gqw-pnpm-11.22.0"
+          "store_path": "/nix/store/4cgvir2rfw19yvni23j747rgkn98p3dm-pnpm-12.9.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/33x60qag0i4ri26wvvkp4lb3hhqw6fsc-pnpm-11.22.0",
+              "path": "/nix/store/gslcmgvwsgn1csg90b4dpcgxr57x91yv-pnpm-12.9.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/33x60qag0i4ri26wvvkp4lb3hhqw6fsc-pnpm-11.22.0"
+          "store_path": "/nix/store/gslcmgvwsgn1csg90b4dpcgxr57x91yv-pnpm-12.9.0"
         }
       }
     },

@@ -4,7 +4,7 @@
     // language runtimes
     "go@1.27.0",
     "nodejs@24.12.0",
-    "pnpm@11.22.0",
+    "pnpm@12.9.0",
     // go tools
     "gopls@0.23.0",
     "sqlc@1.31.1",
