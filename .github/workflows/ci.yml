@@ -121,3 +121,14 @@ jobs:
 
       - name: Build image
         run: docker build .
+
+  # Single aggregate check: mark only "CI OK" as required in branch protection.
+  ci-ok:
+    name: CI OK
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [go, ts, frontend, docker]
+    steps:
+      - name: Fail if any required job did not succeed
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
+        run: exit 1
