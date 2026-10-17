@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-add_to_zshrc() {
-  touch ~/.zshrc
-  grep -qxF "$1" ~/.zshrc || echo "$1" >> ~/.zshrc
-}
-
-# host nix (daemon mode) is bind-mounted at /nix: make nix visible and fetch devbox if it isn't
+# host nix (daemon mode) is bind-mounted at /nix: make nix visible
 [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ] && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-command -v devbox >/dev/null || {
-  nix --extra-experimental-features 'nix-command flakes' profile add github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#devbox # v0.18.4
-}
-add_to_zshrc 'eval "$(devbox global shellenv)"'
-eval "$(devbox global shellenv)"
 
 direnv allow
 devbox install
@@ -32,5 +22,3 @@ curl -L "https://github.com/hilmoo/protoforge/releases/download/v${PROTOFORGE_VE
 direnv reload
 
 perl -0pi -e 's/,(\s*[}\]])/$1/g' devbox.jsonc
-
-add_to_zshrc 'eval "$(task --completion zsh)"'

@@ -1,13 +1,13 @@
 services:
   workspace:
-    image: ghcr.io/hilmoo/containers/my-devcontainer:2026.10.16
+    image: ghcr.io/hilmoo/containers/my-devcontainer:2026.10.17
     environment:
       # Set NIX_REMOTE=daemon in .devcontainer/.env when /nix is the host's (daemon mode).
       NIX_REMOTE: ${NIX_REMOTE:-}
     volumes:
       - ../..:/workspaces:cached
       # Named volume by default; set NIX_MOUNT_SOURCE=/nix in .devcontainer/.env to use the host's nix.
-      - ${NIX_MOUNT_SOURCE:-shared-nix-my-devcontainer-2026.10.16}:/nix
+      - ${NIX_MOUNT_SOURCE:-shared-nix-my-devcontainer-2026.10.17}:/nix
     command: sleep infinity
 
   db:
@@ -22,6 +22,6 @@ services:
 
 volumes:
   web-app-template-postgres:
-  shared-nix-my-devcontainer-2026.10.16:
-    name: ${NIX_VOLUME_NAME:-shared-nix-my-devcontainer-2026.10.16}
+  shared-nix-my-devcontainer-2026.10.17:
+    name: ${NIX_VOLUME_NAME:-shared-nix-my-devcontainer-2026.10.17}
     external: true
