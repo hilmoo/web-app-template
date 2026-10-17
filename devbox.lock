@@ -119,6 +119,44 @@
         }
       }
     },
+    "gopls@latest": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#gopls",
+      "source": "devbox-search",
+      "version": "0.23.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/arp9275r3k819d8c0b84fs6kc5qzi6lm-gopls-0.23.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/arp9275r3k819d8c0b84fs6kc5qzi6lm-gopls-0.23.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/h2qjnhk99879ypdjgflf8wsx42vp50c4-gopls-0.23.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/h2qjnhk99879ypdjgflf8wsx42vp50c4-gopls-0.23.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s56230qfj8f7qjysff3705rxajmrxmpr-gopls-0.23.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/s56230qfj8f7qjysff3705rxajmrxmpr-gopls-0.23.0"
+        }
+      }
+    },
     "lefthook@2.1.15": {
       "last_modified": "2026-10-14T08:20:44Z",
       "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#lefthook",
@@ -273,6 +311,82 @@
             }
           ],
           "store_path": "/nix/store/a0a2nvvxx36lzp4b0cs3fbfxphhfdjc8-openapi-generator-cli-7.25.0"
+        }
+      }
+    },
+    "oxfmt@0.68.0": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#oxfmt",
+      "source": "devbox-search",
+      "version": "0.68.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9l2qg3rxapb8nq5nymzmh1g80l511vyg-oxfmt-0.68.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9l2qg3rxapb8nq5nymzmh1g80l511vyg-oxfmt-0.68.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/529x17dvfpayfhraf4kl4p4d2p858h2r-oxfmt-0.68.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/529x17dvfpayfhraf4kl4p4d2p858h2r-oxfmt-0.68.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8gwqmsrpal5m1wb0mvbnr2vav6apddi8-oxfmt-0.68.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8gwqmsrpal5m1wb0mvbnr2vav6apddi8-oxfmt-0.68.0"
+        }
+      }
+    },
+    "oxlint@1.86.0": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#oxlint",
+      "source": "devbox-search",
+      "version": "1.86.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/2si88n1xraaai84rwcg4a2yn3v0nrj4p-oxlint-1.86.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/2si88n1xraaai84rwcg4a2yn3v0nrj4p-oxlint-1.86.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9ywb3hgz5dkn861h7py2d3miwb8a81dl-oxlint-1.86.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9ywb3hgz5dkn861h7py2d3miwb8a81dl-oxlint-1.86.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pfxy4b0gmyym926ppkkvq8vk0cmfj0sd-oxlint-1.86.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pfxy4b0gmyym926ppkkvq8vk0cmfj0sd-oxlint-1.86.0"
         }
       }
     },
@@ -635,6 +749,120 @@
             }
           ],
           "store_path": "/nix/store/khl5lpnc1qx0gy6rr15n31pizd4zp115-sqlc-1.31.1"
+        }
+      }
+    },
+    "tsgolint@7.0.2003": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#tsgolint",
+      "source": "devbox-search",
+      "version": "7.0.2003",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s7jya28aa0728swv6vrkip7lpp536mbw-tsgolint-7.0.2003",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/s7jya28aa0728swv6vrkip7lpp536mbw-tsgolint-7.0.2003"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/dcqymy9204c5vrfjy3jlsh3f63yz13bb-tsgolint-7.0.2003",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/dcqymy9204c5vrfjy3jlsh3f63yz13bb-tsgolint-7.0.2003"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wm88l2w4afiwyclmpb1wzbahsdr5a53v-tsgolint-7.0.2003",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/wm88l2w4afiwyclmpb1wzbahsdr5a53v-tsgolint-7.0.2003"
+        }
+      }
+    },
+    "tsx@4.23.12": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#tsx",
+      "source": "devbox-search",
+      "version": "4.23.12",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/2l28n0jk641c92vhs30xilx125imwkph-tsx-4.23.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/2l28n0jk641c92vhs30xilx125imwkph-tsx-4.23.12"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/c530ihf1rvxpr9lspwx28bvn7xp3gs1m-tsx-4.23.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/c530ihf1rvxpr9lspwx28bvn7xp3gs1m-tsx-4.23.12"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/qvcbz3f6pvns6kw5ijl8japphrz6qi1x-tsx-4.23.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/qvcbz3f6pvns6kw5ijl8japphrz6qi1x-tsx-4.23.12"
+        }
+      }
+    },
+    "typescript@7.0.2": {
+      "last_modified": "2026-10-14T08:20:44Z",
+      "resolved": "github:NixOS/nixpkgs/319e4cebef10cbb636c6ea392137b52ad105336a#typescript",
+      "source": "devbox-search",
+      "version": "7.0.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/frnh46vpylhqgs06knxbl56z8vfix5gh-typescript-7.0.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/frnh46vpylhqgs06knxbl56z8vfix5gh-typescript-7.0.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pr9a9hv7am4hfg433x2bvxisw6q1zgi4-typescript-7.0.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pr9a9hv7am4hfg433x2bvxisw6q1zgi4-typescript-7.0.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cr53f8n3x4knbwcymv1hxmwam7a0sdql-typescript-7.0.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cr53f8n3x4knbwcymv1hxmwam7a0sdql-typescript-7.0.2"
         }
       }
     },

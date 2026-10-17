@@ -3,28 +3,76 @@
 	"dockerComposeFile": "compose.yaml",
 	"service": "workspace",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"remoteUser": "vscode",
+	"remoteEnv": {
+		// nix from the host's /nix mount (no-op with the named volume if the path doesn't exist)
+		"PATH": "${containerEnv:PATH}:/nix/var/nix/profiles/default/bin"
+	},
+	"forwardPorts": [
+		5432, // postgres
+		8080, // core (serves the API under /api and the frontend)
+		3000 // vite dev server (proxied by core)
+	],
+	"postCreateCommand": ".devcontainer/post-create.sh",
 	"customizations": {
 		"vscode": {
+			"extensions": [
+				// Environment / tooling
+				"jetpack-io.devbox",
+				"mkhl.direnv",
+				"task.vscode-task",
+				"Anthropic.claude-code",
+				// Go
+				"golang.go",
+				// TypeScript / JS
+				"oxc.oxc-vscode",
+				"TypeScriptTeam.native-preview",
+				// API & schema (OpenAPI, TypeSpec, protobuf, YAML)
+				"typespec.typespec-vscode",
+				"42Crunch.vscode-openapi",
+				"stoplight.spectral",
+				"bufbuild.vscode-buf",
+				"redhat.vscode-yaml",
+				// Database
+				"dbdiagram.dbdiagram-vscode"
+			],
 			"settings": {
+				// -- Devbox / direnv --
 				"json.schemaDownload.trustedDomains": {
 					"https://raw.githubusercontent.com/jetify-com/devbox/": true
 				},
+				"direnv.path.executable": "/home/vscode/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/direnv",
+				// -- Go --
 				"go.lintTool": "golangci-lint-v2",
 				"go.lintFlags": [
 					"--path-mode=abs",
 					"--fast-only"
 				],
 				"go.formatTool": "custom",
-				"go.alternateTools": {
-					"customFormatter": "golangci-lint-v2",
-					"golangci-lint-v2": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/golangci-lint"
-				},
 				"go.formatFlags": [
 					"fmt",
 					"--stdin"
 				],
-				"typespec.tsp-server.path": "${containerWorkspaceFolder}/node_modules/@typespec/compiler",
+				"go.alternateTools": {
+					"customFormatter": "golangci-lint-v2",
+					"golangci-lint-v2": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/golangci-lint",
+					"gopls": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/gopls"
+				},
+				// -- TypeScript (tsgo) --
+				"js/ts.experimental.useTsgo": true,
+				"js/ts.tsdk.path": "${containerWorkspaceFolder}/.devbox/nix/profile/default/lib/typescript/lib",
+				// -- Oxc (lint / format) --
 				"oxc.path.node": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/node",
+				"oxc.path.oxfmt": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/oxfmt",
+				"oxc.path.oxlint": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/oxlint",
+				"oxc.path.tsgolint": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/tsgolint",
+				"editor.codeActionsOnSave": {
+					"source.fixAll.oxc": "explicit"
+				},
+				// -- API tooling --
+				"typespec.tsp-server.path": "${containerWorkspaceFolder}/openapi/node_modules/@typespec/compiler",
+				"buf.commandLine.path": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/buf",
+				// -- Generated files (hide from watcher/search, make read-only) --
 				"files.watcherExclude": {
 					"**/routeTree.gen.ts": true
 				},
@@ -33,33 +81,8 @@
 				},
 				"files.readonlyInclude": {
 					"**/routeTree.gen.ts": true
-				},
-				"js/ts.experimental.useTsgo": true,
-				"editor.codeActionsOnSave": {
-					"source.fixAll.oxc": "explicit"
 				}
-			},
-			"extensions": [
-				"golang.go",
-				"jetpack-io.devbox",
-				"mkhl.direnv",
-				"redhat.vscode-yaml",
-				"stoplight.spectral",
-				"task.vscode-task",
-				"42Crunch.vscode-openapi",
-				"typespec.typespec-vscode",
-				"dbdiagram.dbdiagram-vscode",
-				"oxc.oxc-vscode",
-				"Anthropic.claude-code",
-				"bufbuild.vscode-buf"
-			]
+			}
 		}
-	},
-	"remoteUser": "vscode",
-	"postCreateCommand": ".devcontainer/post-create.sh",
-	"forwardPorts": [
-		5432, // postgres
-		8080, // core (serves the API under /api and the frontend)
-		3000 // vite dev server (proxied by core)
-	]
+	}
 }

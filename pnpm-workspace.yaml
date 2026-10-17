@@ -10,5 +10,3 @@ allowBuilds:
   esbuild: true
   tree-sitter: true
   tree-sitter-json: true
-catalog:
-  "@typespec/compiler": "^1.15.0"

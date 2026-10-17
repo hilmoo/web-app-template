@@ -23,7 +23,7 @@
     "@mantine/hooks": "^9.7.1",
     "@mantine/modals": "^9.7.1",
     "@mantine/notifications": "^9.7.1",
-    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-query": "^5.104.3",
     "@tanstack/react-router": "1.170.41",
     "proto": "workspace:*",
     "react": "^19.2.0",
