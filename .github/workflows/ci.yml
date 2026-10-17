@@ -31,7 +31,7 @@ jobs:
       - name: Lint (golangci-lint)
         uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.13.1
+          version: v2.14.0
           working-directory: core
 
       - name: Check formatting (golangci-lint fmt)
@@ -82,10 +82,10 @@ jobs:
       # Versions are pinned to match devbox.jsonc (renovate keeps them in sync).
       # tsgolint powers type-aware rules (e.g. typescript/no-deprecated) and is found on PATH.
       - name: Lint (oxlint)
-        run: pnpm dlx --package oxlint@1.86.0 --package oxlint-tsgolint@7.0.2003 oxlint
+        run: pnpm dlx --package oxlint@1.88.0 --package oxlint-tsgolint@7.0.2004 oxlint
 
       - name: Check formatting (oxfmt)
-        run: pnpm dlx oxfmt@0.68.0 --check
+        run: pnpm dlx oxfmt@0.73.0 --check
 
   frontend:
     name: Frontend (typecheck, test, build)
