@@ -13,6 +13,6 @@ require (
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/matthewhartstonge/argon2 v1.6.3
 	github.com/ory/herodot v0.10.8
-	github.com/urfave/cli/v3 v3.11.0
+	github.com/urfave/cli/v3 v3.14.0
 	google.golang.org/protobuf v1.36.12
 )
