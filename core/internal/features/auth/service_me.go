@@ -5,9 +5,9 @@ import (
 	servicesv1 "proto/services/v1"
 
 	db "web-app-template-core/internal/gen/sqlc"
-	"web-app-template-core/internal/helper"
 
 	"github.com/google/uuid"
+	"github.com/hilmoo/gomox/sqlx"
 	"github.com/ory/herodot"
 )
 
@@ -18,7 +18,7 @@ func meGetUser(
 ) (db.User, *herodot.DefaultError) {
 	user, err := queries.UserGetById(ctx, userID)
 	if err != nil {
-		return db.User{}, helper.MapDBErrorHTTP(err, "user")
+		return db.User{}, sqlx.MapPgxErrorHTTP(err, "user")
 	}
 
 	return user, nil
@@ -41,7 +41,7 @@ func meUpdateUserService(
 		PasswordHash: nil,
 	})
 	if err != nil {
-		return db.User{}, helper.MapDBErrorHTTP(err, "user")
+		return db.User{}, sqlx.MapPgxErrorHTTP(err, "user")
 	}
 
 	return user, nil

@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	msession "github.com/hilmoo/gomox/transport/middleware/session"
 
 	db "web-app-template-core/internal/gen/sqlc"
 )
@@ -24,7 +23,7 @@ func NewSessionResolver(queries *db.Queries, secret string) *SessionResolver {
 
 // UserIDByToken returns the owner of the unexpired session identified by token.
 func (r *SessionResolver) UserIDByToken(ctx context.Context, token string) (uuid.UUID, error) {
-	sess, err := r.queries.SessionGetByTokenHash(ctx, msession.HashSessionToken(r.secret, token))
+	sess, err := r.queries.SessionGetByTokenHash(ctx, hashSessionToken(r.secret, token))
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("get session: %w", err)
 	}

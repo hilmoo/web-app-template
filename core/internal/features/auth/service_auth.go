@@ -9,7 +9,7 @@ import (
 	db "web-app-template-core/internal/gen/sqlc"
 	"web-app-template-core/internal/helper"
 
-	msession "github.com/hilmoo/gomox/transport/middleware/session"
+	"github.com/hilmoo/gomox/sqlx"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -42,7 +42,7 @@ func passwordLoginService(
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, herodot.ErrUnauthorized.WithReason("invalid email or password").WithDebug(err.Error())
 		}
-		return nil, helper.MapDBErrorHTTP(err, "user")
+		return nil, sqlx.MapPgxErrorHTTP(err, "user")
 	}
 
 	hashPassword := user.PasswordHash
@@ -58,14 +58,13 @@ func passwordLoginService(
 		return nil, herodot.ErrUnauthorized.WithReason("invalid email or password")
 	}
 
-	token, errH := createUserSession(
-		ctx,
-		args.queries,
-		args.secret,
-		user.ID,
-		args.ipAddress,
-		args.userAgent,
-	)
+	token, errH := createSession(ctx, createSessionParams{
+		queries:   args.queries,
+		secret:    args.secret,
+		userID:    user.ID,
+		iPAddress: args.ipAddress,
+		userAgent: args.userAgent,
+	})
 	if errH != nil {
 		return nil, errH
 	}
@@ -116,10 +115,16 @@ func passwordRegisterService(
 				if errors.As(createErr, &pgErr) && pgErr.Code == pgUniqueViolation {
 					return nil, herodot.ErrConflict.WithReason("email already registered").WithDebug(createErr.Error())
 				}
-				return nil, helper.MapDBErrorHTTP(createErr, "user")
+				return nil, sqlx.MapPgxErrorHTTP(createErr, "user")
 			}
 
-			token, errH := createUserSession(ctx, q, args.secret, user.ID, args.ipAddress, args.userAgent)
+			token, errH := createSession(ctx, createSessionParams{
+				queries:   q,
+				secret:    args.secret,
+				userID:    user.ID,
+				iPAddress: args.ipAddress,
+				userAgent: args.userAgent,
+			})
 			if errH != nil {
 				return nil, errH
 			}
@@ -139,7 +144,7 @@ func passwordLogoutService(
 	ctx context.Context,
 	args passwordLogoutServiceParams,
 ) *herodot.DefaultError {
-	err := args.queries.SessionDeleteByTokenHash(ctx, msession.HashSessionToken(args.secret, args.token))
+	err := args.queries.SessionDeleteByTokenHash(ctx, hashSessionToken(args.secret, args.token))
 	if err != nil {
 		return herodot.ErrInternalServerError.WithReason("failed to delete session").WithDebug(err.Error())
 	}
