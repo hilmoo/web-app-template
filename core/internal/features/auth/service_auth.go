@@ -12,6 +12,7 @@ import (
 	msession "github.com/hilmoo/gomox/transport/middleware/session"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/matthewhartstonge/argon2"
 	"github.com/ory/herodot"
 )
@@ -76,6 +77,7 @@ func passwordLoginService(
 }
 
 type passwordRegisterServiceParams struct {
+	pool      *pgxpool.Pool
 	queries   *db.Queries
 	in        *servicesv1.AuthRegisterRequest
 	secret    string
@@ -97,35 +99,34 @@ func passwordRegisterService(
 		return nil, herodot.ErrInternalServerError.WithReason("failed to hash password").WithDebug(err.Error())
 	}
 
-	user, err := args.queries.UserCreatePassword(ctx, db.UserCreatePasswordParams{
-		Email:        args.in.GetEmail(),
-		FullName:     args.in.GetFullName(),
-		PasswordHash: &hash,
-	})
-	if err != nil {
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) && pgErr.Code == pgUniqueViolation {
-			return nil, herodot.ErrConflict.WithReason("email already registered").WithDebug(err.Error())
-		}
-		return nil, helper.MapDBErrorHTTP(err, "user")
-	}
-
-	token, errH := createUserSession(
+	// The user and its first session are created atomically, so a failed session insert
+	// cannot leave a registered user behind without a session.
+	return helper.WithTx(
 		ctx,
+		args.pool,
 		args.queries,
-		args.secret,
-		user.ID,
-		args.ipAddress,
-		args.userAgent,
-	)
-	if errH != nil {
-		return nil, errH
-	}
+		func(q *db.Queries) (*passwordRegisterServiceResult, *herodot.DefaultError) {
+			user, createErr := q.UserCreatePassword(ctx, db.UserCreatePasswordParams{
+				Email:        args.in.GetEmail(),
+				FullName:     args.in.GetFullName(),
+				PasswordHash: &hash,
+			})
+			if createErr != nil {
+				var pgErr *pgconn.PgError
+				if errors.As(createErr, &pgErr) && pgErr.Code == pgUniqueViolation {
+					return nil, herodot.ErrConflict.WithReason("email already registered").WithDebug(createErr.Error())
+				}
+				return nil, helper.MapDBErrorHTTP(createErr, "user")
+			}
 
-	return &passwordRegisterServiceResult{
-		user:  user,
-		token: token,
-	}, nil
+			token, errH := createUserSession(ctx, q, args.secret, user.ID, args.ipAddress, args.userAgent)
+			if errH != nil {
+				return nil, errH
+			}
+
+			return &passwordRegisterServiceResult{user: user, token: token}, nil
+		},
+	)
 }
 
 type passwordLogoutServiceParams struct {

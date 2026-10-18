@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	errort "github.com/hilmoo/gomox/transport/error"
 	"github.com/hilmoo/gomox/transport/validation"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ory/herodot"
 )
 
@@ -19,6 +20,7 @@ type connectHandler struct {
 	servicesv1connect.UnimplementedAuthServiceHandler
 
 	validate *validation.Vld
+	pool     *pgxpool.Pool
 	queries  *db.Queries
 	secret   string
 	isProd   bool
@@ -29,6 +31,7 @@ var _ servicesv1connect.AuthServiceHandler = (*connectHandler)(nil)
 func NewConnect(arg helper.HandlerParams) servicesv1connect.AuthServiceHandler {
 	return &connectHandler{
 		validate: arg.Validate,
+		pool:     arg.Pool,
 		queries:  arg.Queries,
 		secret:   arg.Config.Secret,
 		isProd:   arg.Config.IsProd,
@@ -80,6 +83,7 @@ func (h *connectHandler) AuthRegister(
 	}
 
 	resp, errH := passwordRegisterService(ctx, passwordRegisterServiceParams{
+		pool:      h.pool,
 		queries:   h.queries,
 		secret:    h.secret,
 		in:        req,
