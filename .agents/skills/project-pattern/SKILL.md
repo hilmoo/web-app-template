@@ -10,7 +10,9 @@ TanStack Query + Router, connect-query) in `frontend/`, **Postgres**. Ships with
 email/password auth only; `auth` is the reference feature for every layer.
 
 For the Go layering (handler → service → repository, errors, Deps/Provide wiring), load
-the **core-pattern** skill. This skill covers the parts that cross packages.
+the **core-pattern** skill. For the React layering (route → page → component → api hook,
+`index.ts` public API, import boundaries), load the **frontend-pattern** skill. This skill
+covers the parts that cross packages.
 
 ## Project map
 
@@ -36,7 +38,7 @@ scripts/     rename.sh (one-off placeholder rename), kill-orphans.sh
 | `core/internal/config/` | Env config |
 | `frontend/src/features/<feature>/` | `api/` hooks, `components/`, `pages/`, `schemas.ts`, `index.ts` (public API) |
 | `frontend/src/routes/` | TanStack file routes (thin: import from `#/features/<x>`) |
-| `frontend/src/shared/` | Cross-feature components and lib |
+| `frontend/src/shared/` | Feature-agnostic components and lib (never imports a feature) |
 
 ### Naming
 
@@ -152,10 +154,10 @@ Work top-down along the pipeline; each step consumes the previous step's output.
    `register(servicesv1connect.New<Feature>ServiceHandler(bundle.Handler, opts...))`.
    Procedures require auth by default; public ones go in the feature's `AccessPolicy`
    (see `core/internal/features/auth/access.go`), internal-only ones in `AccessInternalOnly`.
-6. **Frontend**: in `frontend/src/features/<feature>/`:
-   - `api/use-<op>.ts`: `useQuery` / `useMutation` from `@connectrpc/connect-query` with
-     `<Feature>Service.method.<op>` imported from `proto/servicesV1`; update or invalidate
-     the query cache in `onSuccess`.
+6. **Frontend**: in `frontend/src/features/<feature>/` per the frontend-pattern skill:
+   - `api/use-<feature>-<op>.ts` exporting `use<Feature><Op>`: `useQuery` / `useMutation` from
+     `@connectrpc/connect-query` with `<Feature>Service.method.<op>` imported from
+     `proto/servicesV1`; update or invalidate the query cache in `onSuccess`.
    - `schemas.ts`: extend the orval zod body from `#/api/schemas/<tag>/...` with UI messages.
    - `components/`, `pages/`, and `index.ts` exporting only what other code may use.
    - Route in `frontend/src/routes/<path>.tsx`: `createFileRoute`, `component` from

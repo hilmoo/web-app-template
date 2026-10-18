@@ -94,6 +94,124 @@
     "react-hooks/exhaustive-deps": "off"
   },
   "overrides": [
+    // Import boundaries (the frontend's depguard; see .agents/skills/frontend-pattern).
+    // A later override replaces an earlier no-restricted-imports, so each block restates the shared patterns.
+    {
+      "files": ["src/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["#/features/*/**"],
+                "message": "Import another feature only through its index.ts (#/features/<feature>)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/shared/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["#/features/**"],
+                "message": "shared/ must not depend on a feature; move the code into a feature."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["#/features/*/**"],
+                "message": "Import another feature only through its index.ts (#/features/<feature>)."
+              },
+              {
+                "group": ["../../**"],
+                "message": "Do not leave the feature with relative imports; use #/features/<feature> or #/shared."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/*/components/**", "src/features/*/pages/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@connectrpc/connect-query",
+                "message": "Call RPCs through the feature's api/use-<feature>-<op>.ts hook."
+              },
+              {
+                "name": "proto/servicesV1",
+                "message": "Call RPCs through the feature's api/use-<feature>-<op>.ts hook; take message types from proto/modelsV1."
+              }
+            ],
+            "patterns": [
+              {
+                "group": ["#/features/*/**"],
+                "message": "Import another feature only through its index.ts (#/features/<feature>)."
+              },
+              {
+                "group": ["../../**"],
+                "message": "Do not leave the feature with relative imports; use #/features/<feature> or #/shared."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/*/api/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react-hook-form",
+                "message": "api/ is data access only; forms live in components/."
+              },
+              {
+                "name": "@tanstack/react-router",
+                "message": "api/ is data access only; navigate from pages/ or guards.ts."
+              }
+            ],
+            "patterns": [
+              {
+                "group": ["@mantine/**"],
+                "message": "api/ is data access only; UI and notifications live in components/."
+              },
+              {
+                "group": ["#/features/*/**"],
+                "message": "Import another feature only through its index.ts (#/features/<feature>)."
+              },
+              {
+                "group": ["../../**"],
+                "message": "Do not leave the feature with relative imports; use #/features/<feature> or #/shared."
+              }
+            ]
+          }
+        ]
+      }
+    },
     {
       "files": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {

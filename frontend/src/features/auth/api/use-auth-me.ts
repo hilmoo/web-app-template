@@ -7,18 +7,18 @@ import type { AuthMeUser } from "proto/modelsV1";
 
 const authMe = AuthService.method.authMe;
 
-export const meQueryKey = () =>
+export const authMeQueryKey = () =>
   createConnectQueryKey({ schema: authMe, input: {}, cardinality: "finite" });
 
-export function setMe(queryClient: QueryClient, user: AuthMeUser | undefined) {
-  queryClient.setQueryData(meQueryKey(), create(AuthMeResponseSchema, { data: user }));
+export function setAuthMe(queryClient: QueryClient, user: AuthMeUser | undefined) {
+  queryClient.setQueryData(authMeQueryKey(), create(AuthMeResponseSchema, { data: user }));
 }
 
-export function useMe() {
+export function useAuthMe() {
   return useQuery(authMe, {}, { select: (res) => res.data });
 }
 
-export async function fetchMe(queryClient: QueryClient, transport: Transport) {
+export async function fetchAuthMe(queryClient: QueryClient, transport: Transport) {
   try {
     const res = await queryClient.query({
       ...createQueryOptions(authMe, {}, { transport }),

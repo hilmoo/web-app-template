@@ -1,9 +1,9 @@
 import { Container, Text, Title } from "@mantine/core";
-import { useMe } from "#/features/auth";
-import { AppShell } from "#/shared/components/app-shell";
+import { useAuthMe } from "#/features/auth";
+import { AppShell } from "#/features/layout";
 
 export function HomePage() {
-  const { data: user } = useMe();
+  const { data: user } = useAuthMe();
 
   return (
     <AppShell>

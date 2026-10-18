@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Avatar, Box, Container, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { EditProfileModal, useLogout, useMe } from "#/features/auth";
+import { EditProfileModal, useAuthLogout, useAuthMe } from "#/features/auth";
 
 function initials(name?: string, email?: string) {
   const source = name?.trim() || email || "?";
@@ -14,8 +14,8 @@ function initials(name?: string, email?: string) {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const { data: user } = useMe();
-  const logout = useLogout();
+  const { data: user } = useAuthMe();
+  const logout = useAuthLogout();
   const [editingProfile, setEditingProfile] = useState(false);
 
   return (
