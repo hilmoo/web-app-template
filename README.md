@@ -82,6 +82,8 @@ Use `auth` as the reference (`core/internal/features/auth`, `frontend/src/featur
 
 Procedures require authentication by default. Opt out per procedure with an `AccessPolicy` (see `core/internal/features/auth/access.go`).
 
+Cross-feature calls, events and transactions follow the rules in [docs/architecture.md](docs/architecture.md).
+
 ## Configuration
 
 Set in `.env` (git-ignored; see `.env.example`):
