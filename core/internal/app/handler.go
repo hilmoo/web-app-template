@@ -43,7 +43,12 @@ func RegisterConnect(handleArg helper.HandlerParams, mux *http.ServeMux) []strin
 	opts := []connect.HandlerOption{
 		connect.WithInterceptors(
 			mlog.ConnectLogger(handleArg.Logger),
-			helper.NewAuthInterceptor(handleArg, auth.Access, AccessInternalOnly),
+			helper.NewAuthInterceptor(
+				handleArg,
+				auth.NewSessionResolver(handleArg.Queries, handleArg.Config.Secret),
+				auth.Access,
+				AccessInternalOnly,
+			),
 		),
 	}
 	if handleArg.Config.IsProd {
