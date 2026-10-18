@@ -8,7 +8,7 @@ import (
 	"encoding/base64"
 	"time"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 
 	"github.com/google/uuid"
 	"github.com/hilmoo/gomox/sqlx"

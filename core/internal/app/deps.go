@@ -6,7 +6,7 @@ import (
 	"log/slog"
 
 	"web-app-template-core/internal/config"
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 	"web-app-template-core/internal/helper"
 
 	"github.com/hilmoo/gomox/transport/validation"

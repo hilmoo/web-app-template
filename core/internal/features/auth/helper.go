@@ -8,7 +8,7 @@ import (
 	"github.com/matthewhartstonge/argon2"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 	"web-app-template-core/internal/helper"
 )
 

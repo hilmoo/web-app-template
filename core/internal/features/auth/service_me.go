@@ -4,7 +4,7 @@ import (
 	"context"
 	servicesv1 "proto/services/v1"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 
 	"github.com/google/uuid"
 	"github.com/hilmoo/gomox/sqlx"

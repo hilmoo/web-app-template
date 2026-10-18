@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 )
 
 // SessionResolver looks up the user behind a session token. It satisfies

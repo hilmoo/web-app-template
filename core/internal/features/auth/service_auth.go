@@ -6,7 +6,7 @@ import (
 
 	servicesv1 "proto/services/v1"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 	"web-app-template-core/internal/helper"
 
 	"github.com/hilmoo/gomox/sqlx"

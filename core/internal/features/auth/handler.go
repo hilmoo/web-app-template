@@ -5,7 +5,7 @@ import (
 	servicesv1 "proto/services/v1"
 	"proto/services/v1/servicesv1connect"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 	"web-app-template-core/internal/helper"
 
 	"connectrpc.com/connect"

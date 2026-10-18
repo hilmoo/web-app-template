@@ -3,7 +3,7 @@ package helper
 import (
 	"context"
 
-	db "web-app-template-core/internal/gen/sqlc"
+	db "web-app-template-core/internal/db/sqlc"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ory/herodot"

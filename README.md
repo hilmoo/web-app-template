@@ -16,17 +16,17 @@ scripts/      rename.sh (one-off placeholder rename), kill-orphans.sh
 
 Where things live:
 
-| Path                                  | Purpose                                      |
-| ------------------------------------- | -------------------------------------------- |
-| `migration/src/schema/<name>.ts`      | One Drizzle table file per feature           |
-| `openapi/src/<name>/`                 | TypeSpec API per feature (`main.tsp`, ...)   |
-| `openapi/src/main.tsp`                | Imports every feature's API                  |
-| `core/internal/features/<name>/`      | Handlers, services, helpers per feature      |
-| `core/internal/app/handler.go`        | Registers feature handlers                   |
-| `core/internal/db/sql/`               | Hand-written SQL queries (input to sqlc)     |
-| `core/internal/config/`               | Env config                                   |
-| `frontend/src/features/<name>/`       | API hooks, components, pages per feature     |
-| `frontend/src/routes/`                | File-based routes                            |
+| Path                             | Purpose                                    |
+| -------------------------------- | ------------------------------------------ |
+| `migration/src/schema/<name>.ts` | One Drizzle table file per feature         |
+| `openapi/src/<name>/`            | TypeSpec API per feature (`main.tsp`, ...) |
+| `openapi/src/main.tsp`           | Imports every feature's API                |
+| `core/internal/features/<name>/` | Handlers, services, helpers per feature    |
+| `core/internal/app/handler.go`   | Registers feature handlers                 |
+| `core/internal/db/sql/`          | Hand-written SQL queries (input to sqlc)   |
+| `core/internal/config/`          | Env config                                 |
+| `frontend/src/features/<name>/`  | API hooks, components, pages per feature   |
+| `frontend/src/routes/`           | File-based routes                          |
 
 Root tooling: `Taskfile.yml` (run `task --list`; each package has its own Taskfile), `devbox.jsonc` (pinned toolchain), `.devcontainer/`, `protoforge.yaml` (generation pipeline), `.lefthook.yml` (git hooks), `.github/workflows/ci.yml`, `Dockerfile`, `zellij-dev.kdl` (layout for `task dev`), `renovate.json`.
 
@@ -40,19 +40,19 @@ Drizzle schema → SQL migrations + TypeSpec → openapi.json → .proto → Go 
 
 Generated files are committed and marked `linguist-generated`. Edit the **source**, never the output.
 
-| Source                  | Generated                                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------------ |
-| `migration/src/schema`  | `core/internal/db/migration/migrations`, `migration/schema.dbml`, `openapi/src/_generated` |
-| `openapi/src`           | `openapi/openapi.json`, `proto/registry`, `proto/gen` (Go and TypeScript)                  |
-| `core/internal/db/sql`  | `core/internal/gen/sqlc`                                                                   |
-| `openapi/openapi.json`  | `frontend/src/api/schemas` (zod, via orval)                                                |
-| `frontend/src/routes`   | `frontend/src/routeTree.gen.ts`                                                            |
+| Source                     | Generated                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------ |
+| `migration/src/schema`     | `core/internal/db/migration/migrations`, `migration/schema.dbml`, `openapi/src/_generated` |
+| `openapi/src`              | `openapi/openapi.json`, `proto/registry`, `proto/gen` (Go and TypeScript)                  |
+| `core/internal/db/queries` | `core/internal/db/sqlc`                                                                    |
+| `openapi/openapi.json`     | `frontend/src/api/schemas` (zod, via orval)                                                |
+| `frontend/src/routes`      | `frontend/src/routeTree.gen.ts`                                                            |
 
-| Command         | Does                                                                          |
-| --------------- | ----------------------------------------------------------------------------- |
-| `task gen-all`  | Everything below (needs Postgres up, since Drizzle `push` runs)               |
-| `task gen-sql`  | Drizzle → SQL migrations, then sqlc                                           |
-| `task gen-api`  | TypeSpec → OpenAPI → proto → buf (also builds the TS proto package) → orval   |
+| Command        | Does                                                                        |
+| -------------- | --------------------------------------------------------------------------- |
+| `task gen-all` | Everything below (needs Postgres up, since Drizzle `push` runs)             |
+| `task gen-sql` | Drizzle → SQL migrations, then sqlc                                         |
+| `task gen-api` | TypeSpec → OpenAPI → proto → buf (also builds the TS proto package) → orval |
 
 ## Getting started
 
@@ -88,25 +88,25 @@ Cross-feature calls, events and transactions follow the rules in [docs/architect
 
 Set in `.env` (git-ignored; see `.env.example`):
 
-| Variable                   | Notes                                                                 |
-| -------------------------- | --------------------------------------------------------------------- |
-| `DATABASE_URL`             | Postgres connection string (required)                                 |
-| `SECRET`                   | Hashes session tokens (required)                                      |
-| `SERVICE_SECRET`           | Bearer token for trusted internal services (required)                 |
+| Variable                   | Notes                                                                                                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`             | Postgres connection string (required)                                                                                                                         |
+| `SECRET`                   | Hashes session tokens (required)                                                                                                                              |
+| `SERVICE_SECRET`           | Bearer token for trusted internal services (required)                                                                                                         |
 | `APP_ENV`                  | `production` enables secure cookies and panic recovery, and requires `SECRET` and `SERVICE_SECRET` to be distinct, 32+ chars, and not the example placeholder |
-| `LISTEN_ADDR`, `LOG_LEVEL` | Optional. Defaults: `127.0.0.1:8080`, `INFO`                          |
+| `LISTEN_ADDR`, `LOG_LEVEL` | Optional. Defaults: `127.0.0.1:8080`, `INFO`                                                                                                                  |
 
 ## Tests and checks
 
 Run per package: `task core:<x>` and `task frontend:<x>`.
 
-| Task                     | core | frontend |
-| ------------------------ | :--: | :------: |
-| `test`                   | yes  | yes      |
-| `lint` / `lint:check`    | yes  | yes      |
-| `fmt` / `fmt:check`      | yes  | yes      |
-| `compile`                | yes  |          |
-| `build`                  | yes  | yes      |
+| Task                  | core | frontend |
+| --------------------- | :--: | :------: |
+| `test`                | yes  |   yes    |
+| `lint` / `lint:check` | yes  |   yes    |
+| `fmt` / `fmt:check`   | yes  |   yes    |
+| `compile`             | yes  |          |
+| `build`               | yes  |   yes    |
 
 Root shortcuts: `task lint`, `task build`. Frontend typecheck: `pnpm --filter frontend typecheck`.
 
