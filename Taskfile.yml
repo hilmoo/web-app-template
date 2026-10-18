@@ -18,6 +18,8 @@ includes:
   proto:
     taskfile: proto/Taskfile.yml
     dir: proto
+  gen: https://raw.githubusercontent.com/hilmoo/protoforge/refs/tags/v0.0.3/Taskfile.yml
+    
 
 tasks:
   dev:
@@ -33,24 +35,6 @@ tasks:
     cmds:
       - zellij delete-session dev --force
       - ./scripts/kill-orphans.sh
-
-  gen-all:
-    desc: Generate everything (migration -> typespec -> openapi -> proto -> codegen)
-    cmds:
-      - task: gen-sql
-      - task: gen-api
-
-  gen-sql:
-    desc: Generate SQL migration files from the drizzle schema
-    cmds:
-      - protoforge run migration
-      - task: core:gen-sql
-
-  gen-api:
-    desc: Generate TypeSpec, OpenAPI and proto files
-    cmds:
-      - protoforge run typespec openapi proto
-      - task: frontend:orval
 
   lint:
     desc: Lint core and frontend

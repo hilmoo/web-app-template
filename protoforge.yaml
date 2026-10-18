@@ -12,6 +12,8 @@ migration:
   docs: {}
   sync:
     to: ../core/internal/db/migration/migrations
+  run_after:
+    - sh -c 'cd .. && task core:gen-sql'
 
 # drizzle schema -> TypeSpec models, TypeSpec -> OpenAPI
 typespec:
@@ -25,6 +27,8 @@ openapi:
   dir: openapi
   format: true
   go_tags: true
+  run_after:
+    - sh -c 'cd .. && task frontend:orval'
 
 # OpenAPI -> .proto, then `task` (proto/Taskfile.yml default) runs buf generate
 proto:
