@@ -7,8 +7,8 @@ import (
 	servicesv1 "proto/services/v1"
 
 	db "web-app-template-core/internal/gen/sqlc"
+	"web-app-template-core/internal/helper"
 
-	"github.com/hilmoo/gomox/sqlx"
 	msession "github.com/hilmoo/gomox/transport/middleware/session"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -41,7 +41,7 @@ func passwordLoginService(
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, herodot.ErrUnauthorized.WithReason("invalid email or password").WithDebug(err.Error())
 		}
-		return nil, sqlx.MapDBErrorHTTP(err, "user")
+		return nil, helper.MapDBErrorHTTP(err, "user")
 	}
 
 	hashPassword := user.PasswordHash
@@ -107,7 +107,7 @@ func passwordRegisterService(
 		if errors.As(err, &pgErr) && pgErr.Code == pgUniqueViolation {
 			return nil, herodot.ErrConflict.WithReason("email already registered").WithDebug(err.Error())
 		}
-		return nil, sqlx.MapDBErrorHTTP(err, "user")
+		return nil, helper.MapDBErrorHTTP(err, "user")
 	}
 
 	token, errH := createUserSession(
