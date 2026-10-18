@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	errort "github.com/hilmoo/gomox/transport/error"
 	"github.com/ory/herodot"
@@ -15,11 +14,6 @@ var (
 	ErrEmailAlreadyRegistered = errors.New("email already registered")
 	ErrSessionNotFound        = errors.New("session not found")
 )
-
-// userNotFound adds the lookup key (id or email) for logs while staying matchable with [errors.Is].
-func userNotFound(key string) error {
-	return fmt.Errorf("%w: %s", ErrUserNotFound, key)
-}
 
 func toConnectError(ctx context.Context, err error) error {
 	return errort.ConnectError(ctx, toAppError(err))

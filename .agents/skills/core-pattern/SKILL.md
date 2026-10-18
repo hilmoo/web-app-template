@@ -50,7 +50,7 @@ internal/features/<feature>/
 ├── service.go      # Service interface + service struct (business rules, ownership, quotas)
 ├── handler.go      # connectHandler: proto ⇄ domain, validation, user context, error dispatch
 ├── mapper.go       # domain → proto converters (toProto<Feature>)
-├── errors.go       # sentinels, <feature>NotFound(id), toAppError, toConnectError
+├── errors.go       # sentinels, toAppError, toConnectError (+ <feature>NotFound(id) if a service checks ownership)
 ├── provider.go     # Deps + Provide(): repo → service → handler
 ├── access.go       # AccessPolicy overrides (public / service-only procedures)
 ├── events.go       # optional: topic constants
@@ -70,7 +70,8 @@ service   ── semantic rules, ownership (→ NotFound), quotas; returns senti
    │          knows nothing about proto, Connect, herodot
    ▼
 repository── sqlc calls, transactions (helper.WithTx), row → domain;
-              pgx.ErrNoRows / unique violation → sentinels; other → fmt.Errorf("<feature>: <op>: %w")
+              pgx.ErrNoRows / unique violation → sentinels via helper.MapDBError;
+              other → fmt.Errorf("<feature>: <op>: %w")
 ```
 
 | Layer | May import | Must NOT import |
@@ -80,11 +81,27 @@ repository── sqlc calls, transactions (helper.WithTx), row → domain;
 | repository | sqlc `db`, pgx, gomox `sqlx`, helper.WithTx | proto, herodot, connect |
 | feature ↔ feature | — | never import another feature; use consumer-side interfaces wired in `internal/app` |
 
+The import boundaries above are enforced by `depguard` in `core/.golangci.yml`, by file name:
+`handler*.go` (no sqlc, pgx), `service*.go` (no proto, connect, herodot, sqlc, pgx),
+`repository*.go` (no proto, connect, herodot), `types.go` (no proto, connect, herodot, sqlc, pgx),
+and any feature file importing another feature. Name files accordingly: service-side helpers go in
+`service*.go`, handler-side helpers in `handler*.go`. `depguard` only sees imports, so two rules
+stay a review matter because the layers share a package: the handler talks to the `Service`
+interface only (never `Repository`/`postgresRepo`), and the service never refers to the handler.
+
+### Pass-through service methods are intentional
+
+Every feature has a service, even when a method only forwards to the repository (`Me`, `Get`,
+`Delete`...). The rule is "every feature has a service", with no per-method or per-feature
+exceptions: consistency beats saving three lines, and an exception rule would be a judgment call
+repeated on every feature. Do not add, remove or justify the layer based on guesses about what
+the method might need later; do not "optimize" a pass-through away.
+
 ## Adding a Feature — Checklist
 
 1. **Contract:** add the service/RPCs in `openapi/`, regenerate proto. RPC names are `<Feature><Action>` (e.g. `AuthLogin`); responses wrap payload in `data` (+ `pagination` for lists).
 2. **Schema:** add the migration; write `internal/db/queries/<table>.sql`; run `task gen` in `core/`.
-3. **Feature package:** create the files above from [references/feature-module-template.md](references/feature-module-template.md).
+3. **Feature package:** start from [references/reference-feature-note.md](references/reference-feature-note.md) (smallest complete CRUD feature, files in write order), then take the extras (pagination, partial update, transactions) from [references/feature-module-template.md](references/feature-module-template.md).
 4. **Errors:** declare sentinels and map them in `toAppError` — [references/error-flow.md](references/error-flow.md).
 5. **Access:** list non-default procedures in `access.go` (default = authenticated).
 6. **Wire:** in `internal/app/handler.go` `RegisterConnect`, call `register(servicesv1connect.New<Feature>ServiceHandler(<feature>.Provide(<feature>.Deps{...}), opts...))` and pass `<feature>.Access` to `NewAuthInterceptor` — [references/interceptor-wiring.md](references/interceptor-wiring.md).
@@ -94,7 +111,7 @@ repository── sqlc calls, transactions (helper.WithTx), row → domain;
 ## Core Rules (summary)
 
 - Services and repositories return plain `error`; only the handler turns errors into herodot/Connect errors.
-- `pgx.ErrNoRows` → feature sentinel in the repository, always.
+- Repositories map every sqlc error through `helper.MapDBError(err, "<feature>: <op>", notFound, conflict)`: `pgx.ErrNoRows` → feature sentinel, unique violation → conflict sentinel, else wrapped. No hand-rolled `ErrNoRows` / `ClassifyPgError` checks.
 - Ownership failure → `NotFound` (never leak existence).
 - Never log **and** return an error. The `ConnectLogger` interceptor logs every failed call once; `errort.ConnectError` attaches the herodot reason/debug to that log line.
 - Handlers never use `errors.Is` — they call `toConnectError(ctx, err)` once.
@@ -107,6 +124,7 @@ repository── sqlc calls, transactions (helper.WithTx), row → domain;
 
 | File | Covers |
 |---|---|
+| [references/reference-feature-note.md](references/reference-feature-note.md) | Smallest complete feature (plain CRUD): every file in write order, minimal shape per layer |
 | [references/feature-module-template.md](references/feature-module-template.md) | Copy-paste scaffold for every file + SQL queries |
 | [references/error-flow.md](references/error-flow.md) | Repository → service → handler → Connect error pipeline |
 | [references/interceptor-wiring.md](references/interceptor-wiring.md) | Mux layout, interceptor chain, access policy, user context, consumer-side interfaces |

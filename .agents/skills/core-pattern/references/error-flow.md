@@ -10,9 +10,9 @@ herodot error exactly once in the handler, turned into a Connect error by
 Repository              Service                 Handler                         Interceptor
    │                       │                       │                                 │
    ├─ pgx.ErrNoRows        │                       │                                 │
-   │  → <x>NotFound(id)    │                       │                                 │
+   │  → Err<X>NotFound     │                       │                                 │
    ├─ unique violation     │                       │                                 │
-   │  → Err<X>AlreadyExists│                       │                                 │
+   │  → Err<X>AlreadyExists│  (all via helper.MapDBError)                            │
    ├─ other DB error       │                       │                                 │
    │  → fmt.Errorf(        │                       │                                 │
    │   "<feat>: <op>: %w") │                       │                                 │
@@ -32,16 +32,13 @@ Repository              Service                 Handler                         
                                                                      (level by Connect code)
 ```
 
-## Stage 1: Repository — wrap with context
+## Stage 1: Repository — map through `helper.MapDBError`
 
 ```go
 func (r *postgresRepo) FindByID(ctx context.Context, id uuid.UUID) (Thing, error) {
 	row, err := r.q.GetThing(ctx, id)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return Thing{}, thingNotFound(id)
-	}
 	if err != nil {
-		return Thing{}, fmt.Errorf("thing: find: %w", err)
+		return Thing{}, helper.MapDBError(err, "thing: find", ErrThingNotFound, nil)
 	}
 	return thingFromRow(row), nil
 }
@@ -49,20 +46,19 @@ func (r *postgresRepo) FindByID(ctx context.Context, id uuid.UUID) (Thing, error
 func (r *postgresRepo) Create(ctx context.Context, in CreateThingInput) (Thing, error) {
 	row, err := r.q.CreateThing(ctx, db.CreateThingParams{Name: in.Name})
 	if err != nil {
-		if errors.Is(sqlx.ClassifyPgError(err), sqlx.ErrAlreadyExists) {
-			return Thing{}, fmt.Errorf("%w: %w", ErrThingAlreadyExists, err)
-		}
-		return Thing{}, fmt.Errorf("thing: create: %w", err)
+		return Thing{}, helper.MapDBError(err, "thing: create", nil, ErrThingAlreadyExists)
 	}
 	return thingFromRow(row), nil
 }
 ```
 
+`MapDBError(err, op, notFound, conflict)`: `pgx.ErrNoRows` → `notFound`, unique violation → `conflict`, anything else → `fmt.Errorf("<op>: %w", err)`; `nil` err → `nil`. Pass `nil` for a sentinel the call cannot produce. The original error stays in the chain, so logs keep the pgx detail.
+
 **Rules:**
 
-- `pgx.ErrNoRows` → always a domain sentinel.
-- Constraint violations → `sqlx.ClassifyPgError` + feature sentinel when the client must see it (e.g. "email already registered").
-- Other errors → `fmt.Errorf("<feature>: <operation>: %w", err)`.
+- Every sqlc call's error goes through `helper.MapDBError`; no hand-rolled `errors.Is(err, pgx.ErrNoRows)` or `sqlx.ClassifyPgError` in repositories.
+- `op` is `"<feature>: <operation>"`.
+- FK / not-null / check violations are not mapped by the helper; handle one explicitly only when the client must see it.
 - Never return raw pgx errors upward without wrapping; never import herodot/connect here.
 - Don't use `sqlx.MapPgxErrorHTTP` in new code — it builds herodot errors inside the data layer.
 
@@ -174,7 +170,7 @@ func thingNotFound(id uuid.UUID) error {
 ```
 
 - Prefix `Err<Feature>...`; message lowercase, no punctuation.
-- Constructor helpers (`thingNotFound(id)`) add the ID for logs while staying `errors.Is`-matchable.
+- Constructor helpers (`thingNotFound(id)`) are for service-level ownership checks: they add the ID for logs while staying `errors.Is`-matchable. Repositories use `helper.MapDBError` instead.
 
 ## Shared helpers (target signatures)
 

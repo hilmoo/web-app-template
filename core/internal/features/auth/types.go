@@ -48,13 +48,6 @@ type Result struct {
 	Token string
 }
 
-// newUser is what the repository needs to insert a user.
-type newUser struct {
-	Email        string
-	FullName     string
-	PasswordHash string
-}
-
 // newSession is what the repository needs to insert a session.
 type newSession struct {
 	TokenHash string

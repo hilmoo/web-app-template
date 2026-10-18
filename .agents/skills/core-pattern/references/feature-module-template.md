@@ -67,7 +67,6 @@ package <feature>
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	db "web-app-template-core/internal/db/sqlc"
@@ -75,8 +74,6 @@ import (
 	"web-app-template-core/internal/x/typex"
 
 	"github.com/google/uuid"
-	"github.com/hilmoo/gomox/sqlx"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -116,11 +113,8 @@ func (r *postgresRepo) List(ctx context.Context, userID uuid.UUID, page helper.P
 
 func (r *postgresRepo) FindByID(ctx context.Context, id uuid.UUID) (<Feature>, error) {
 	row, err := r.q.Get<Feature>(ctx, id)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return <Feature>{}, <feature>NotFound(id)
-	}
 	if err != nil {
-		return <Feature>{}, fmt.Errorf("<feature>: find: %w", err)
+		return <Feature>{}, helper.MapDBError(err, "<feature>: find", Err<Feature>NotFound, nil)
 	}
 	return <feature>FromRow(row), nil
 }
@@ -132,10 +126,7 @@ func (r *postgresRepo) Create(ctx context.Context, userID uuid.UUID, in Create<F
 		Note:   in.Note,
 	})
 	if err != nil {
-		if errors.Is(sqlx.ClassifyPgError(err), sqlx.ErrAlreadyExists) {
-			return <Feature>{}, fmt.Errorf("%w: %w", Err<Feature>AlreadyExists, err)
-		}
-		return <Feature>{}, fmt.Errorf("<feature>: create: %w", err)
+		return <Feature>{}, helper.MapDBError(err, "<feature>: create", nil, Err<Feature>AlreadyExists)
 	}
 	return <feature>FromRow(row), nil
 }
@@ -146,11 +137,8 @@ func (r *postgresRepo) Update(ctx context.Context, id uuid.UUID, in Update<Featu
 		Name: in.Name,
 		Note: in.Note,
 	})
-	if errors.Is(err, pgx.ErrNoRows) {
-		return <Feature>{}, <feature>NotFound(id)
-	}
 	if err != nil {
-		return <Feature>{}, fmt.Errorf("<feature>: update: %w", err)
+		return <Feature>{}, helper.MapDBError(err, "<feature>: update", Err<Feature>NotFound, Err<Feature>AlreadyExists)
 	}
 	return <feature>FromRow(row), nil
 }
@@ -181,9 +169,9 @@ func <feature>FromRow(r db.<Feature>) <Feature> {
 **Rules:**
 
 - Repository interface speaks domain types only; sqlc types never leave this file.
-- `pgx.ErrNoRows` → `<feature>NotFound(id)`.
-- Constraint violations: `sqlx.ClassifyPgError(err)` then map `sqlx.ErrAlreadyExists` / `sqlx.ErrConflict` / `sqlx.ErrInvalid` to feature sentinels when the client needs to know.
-- Everything else: `fmt.Errorf("<feature>: <operation>: %w", err)`.
+- Every sqlc error goes through `helper.MapDBError(err, "<feature>: <operation>", notFound, conflict)`: `pgx.ErrNoRows` → `notFound`, unique violation → `conflict`, anything else → `fmt.Errorf("<feature>: <operation>: %w", err)`. Pass `nil` for a sentinel the call cannot produce. Do not hand-roll `errors.Is(err, pgx.ErrNoRows)` or `sqlx.ClassifyPgError` in a repository.
+- FK / not-null / check violations (`sqlx.ErrConflict`, `sqlx.ErrInvalid`) are not mapped by the helper; handle one explicitly only when the client needs to see it.
+- `:execrows` deletes check `rows == 0` and return the not-found sentinel themselves.
 - IDs come from the DB default (`gen_random_uuid()`), so `Create` doesn't pass one.
 - `<feature>FromRow()` converts sqlc row → domain; use `typex.MapSlice` for slices.
 - Delete uses `:execrows` and checks `rows == 0`.
@@ -208,7 +196,7 @@ func (r *postgresRepo) CreateWithChildren(ctx context.Context, userID uuid.UUID,
 	return helper.WithTx(ctx, r.pool, r.q, func(q *db.Queries) (<Feature>, error) {
 		row, err := q.Create<Feature>(ctx, db.Create<Feature>Params{UserID: userID, Name: in.Name})
 		if err != nil {
-			return <Feature>{}, fmt.Errorf("<feature>: create: %w", err)
+			return <Feature>{}, helper.MapDBError(err, "<feature>: create", nil, Err<Feature>AlreadyExists)
 		}
 		// ... more q.Method(ctx, ...) calls on the same tx ...
 		return <feature>FromRow(row), nil

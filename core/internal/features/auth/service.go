@@ -73,11 +73,7 @@ func (s *service) Register(ctx context.Context, in RegisterInput) (Result, error
 		return Result{}, err
 	}
 
-	user, err := s.repo.CreateUserWithSession(ctx, newUser{
-		Email:        in.Email,
-		FullName:     in.FullName,
-		PasswordHash: hash,
-	}, sess)
+	user, err := s.repo.CreateUserWithSession(ctx, in.Email, in.FullName, hash, sess)
 	if err != nil {
 		return Result{}, err
 	}

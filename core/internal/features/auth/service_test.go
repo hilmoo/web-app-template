@@ -25,13 +25,13 @@ func (f *fakeRepo) FindUserByID(_ context.Context, id uuid.UUID) (User, error) {
 			return u, nil
 		}
 	}
-	return User{}, userNotFound(id.String())
+	return User{}, ErrUserNotFound
 }
 
 func (f *fakeRepo) FindUserByEmail(_ context.Context, email string) (User, error) {
 	u, ok := f.users[email]
 	if !ok {
-		return User{}, userNotFound(email)
+		return User{}, ErrUserNotFound
 	}
 	return u, nil
 }
@@ -48,18 +48,22 @@ func (f *fakeRepo) UpdateUser(ctx context.Context, id uuid.UUID, in UpdateMeInpu
 	return u, nil
 }
 
-func (f *fakeRepo) CreateUserWithSession(ctx context.Context, u newUser, s newSession) (User, error) {
-	if _, ok := f.users[u.Email]; ok {
+func (f *fakeRepo) CreateUserWithSession(
+	ctx context.Context,
+	email, fullName, passwordHash string,
+	s newSession,
+) (User, error) {
+	if _, ok := f.users[email]; ok {
 		return User{}, ErrEmailAlreadyRegistered
 	}
 	user := User{
 		ID:           uuid.New(),
-		Email:        u.Email,
-		FullName:     u.FullName,
-		PasswordHash: &u.PasswordHash,
+		Email:        email,
+		FullName:     fullName,
+		PasswordHash: &passwordHash,
 		CreatedAt:    time.Now(),
 	}
-	f.users[u.Email] = user
+	f.users[email] = user
 	return user, f.CreateSession(ctx, user.ID, s)
 }
 
@@ -160,7 +164,7 @@ func TestToAppErrorHidesInternals(t *testing.T) {
 	if errH.ReasonField != "internal error" {
 		t.Errorf("reason = %q, want generic message", errH.ReasonField)
 	}
-	if got := toAppError(userNotFound("x")).CodeField; got != 404 {
+	if got := toAppError(ErrUserNotFound).CodeField; got != 404 {
 		t.Errorf("user not found code = %d, want 404", got)
 	}
 }
