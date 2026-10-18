@@ -10,10 +10,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/google/uuid"
 	errort "github.com/hilmoo/gomox/transport/error"
-	msession "github.com/hilmoo/gomox/transport/middleware/session"
 	"github.com/ory/herodot"
-
-	db "web-app-template-core/internal/gen/sqlc"
 )
 
 const (
@@ -77,9 +74,15 @@ func UserIDFromContext(ctx context.Context) (uuid.UUID, *herodot.DefaultError) {
 	return p.UserID, nil
 }
 
+// SessionResolver maps a raw session token to the id of its user. It is what the
+// interceptor needs from whichever feature owns sessions; internal/app wires it in.
+// Any error means the token is not a valid, unexpired session.
+type SessionResolver interface {
+	UserIDByToken(ctx context.Context, token string) (uuid.UUID, error)
+}
+
 type authInterceptor struct {
-	queries       *db.Queries
-	secret        string
+	sessions      SessionResolver
 	serviceSecret string
 	policy        AccessPolicy
 }
@@ -88,14 +91,13 @@ type authInterceptor struct {
 // authenticate with the session cookie; services with `Authorization: Bearer <SERVICE_SECRET>`
 // and may add `X-User-Id: <uuid>` to act as a user.
 // Per-procedure requirements come from policy; unlisted procedures need authentication.
-func NewAuthInterceptor(arg HandlerParams, policy ...AccessPolicy) connect.Interceptor {
+func NewAuthInterceptor(arg HandlerParams, sessions SessionResolver, policy ...AccessPolicy) connect.Interceptor {
 	p := make(AccessPolicy)
 	for _, v := range policy {
 		maps.Copy(p, v)
 	}
 	return &authInterceptor{
-		queries:       arg.Queries,
-		secret:        arg.Config.Secret,
+		sessions:      sessions,
 		serviceSecret: arg.Config.ServiceSecret,
 		policy:        p,
 	}
@@ -177,9 +179,9 @@ func (i *authInterceptor) resolve(ctx context.Context, header http.Header) (Prin
 	if errH != nil {
 		return Principal{}, nil //nolint:nilerr // no credentials; the access policy decides
 	}
-	userID, errH := SessionUserID(ctx, i.queries, i.secret, token)
-	if errH != nil {
-		return Principal{}, errH
+	userID, err := i.sessions.UserIDByToken(ctx, token)
+	if err != nil {
+		return Principal{}, herodot.ErrUnauthorized.WithReason("authentication required").WithDebug(err.Error())
 	}
 	return Principal{UserID: userID, Service: false}, nil
 }
@@ -201,18 +203,4 @@ func SessionTokenFromHeader(h http.Header) (string, *herodot.DefaultError) {
 		return "", herodot.ErrUnauthorized.WithReason("authentication required").WithDebug("missing session cookie")
 	}
 	return cookie.Value, nil
-}
-
-// SessionUserID resolves a raw session token to the id of its (unexpired) session's user.
-func SessionUserID(
-	ctx context.Context,
-	queries *db.Queries,
-	secret string,
-	token string,
-) (uuid.UUID, *herodot.DefaultError) {
-	sess, err := queries.SessionGetByTokenHash(ctx, msession.HashSessionToken(secret, token))
-	if err != nil {
-		return uuid.Nil, herodot.ErrUnauthorized.WithReason("authentication required").WithDebug(err.Error())
-	}
-	return sess.UserID, nil
 }

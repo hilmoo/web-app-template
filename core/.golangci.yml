@@ -221,6 +221,81 @@ linters:
           deny:
             - pkg: log$
               desc: Use log/slog instead, see https://go.dev/blog/slog
+        "features are not the composition root":
+          files:
+            - "**/internal/features/**"
+          deny:
+            - pkg: web-app-template-core/internal/app
+              desc: Features are wired by internal/app, never the reverse; see the core-pattern skill
+            - pkg: web-app-template-core/internal/cmd
+              desc: Features must not depend on the CLI layer; see the core-pattern skill
+        "features do not import features":
+          files:
+            - "**/internal/features/**"
+          deny:
+            - pkg: web-app-template-core/internal/features
+              desc: Never import another feature; use a consumer-side interface wired in internal/app
+        # Layer boundaries inside a feature, matched by file name (handler*.go, service*.go,
+        # repository*.go, types.go). depguard sees imports only, so "handler must not call the
+        # repository" and "service must not import the handler" are not expressible here: they live
+        # in the same package. The handler only holds a Service; keep it that way in review.
+        "handler layer: no data access":
+          files:
+            - "**/internal/features/**/handler*.go"
+          deny:
+            - pkg: web-app-template-core/internal/db/sqlc
+              desc: Handlers must not use sqlc types or queries; go through the service
+            - pkg: github.com/jackc/pgx
+              desc: Handlers must not touch pgx; go through the service
+            - pkg: github.com/hilmoo/gomox/sqlx
+              desc: Database error mapping belongs in the repository
+        "service layer: no transport, no data access":
+          files:
+            - "**/internal/features/**/service*.go"
+          deny:
+            - pkg: proto/
+              desc: Services must not use proto types; the handler maps proto to domain inputs
+            - pkg: connectrpc.com/connect
+              desc: Services know nothing about Connect; the handler owns transport
+            - pkg: github.com/ory/herodot
+              desc: Services return plain errors and sentinels; toAppError in the handler layer maps them
+            - pkg: web-app-template-core/internal/db/sqlc
+              desc: Services must not use sqlc types or queries; go through the repository
+            - pkg: github.com/jackc/pgx
+              desc: Services must not touch pgx; go through the repository
+        "repository layer: no transport":
+          files:
+            - "**/internal/features/**/repository*.go"
+          deny:
+            - pkg: proto/
+              desc: Repositories return domain types, never proto types
+            - pkg: connectrpc.com/connect
+              desc: Repositories know nothing about Connect
+            - pkg: github.com/ory/herodot
+              desc: Repositories return sentinels; error mapping to herodot belongs to the handler layer
+        "domain types: no transport, no data access":
+          files:
+            - "**/internal/features/**/types.go"
+          deny:
+            - pkg: proto/
+              desc: Domain types must not depend on proto
+            - pkg: connectrpc.com/connect
+              desc: Domain types must not depend on Connect
+            - pkg: github.com/ory/herodot
+              desc: Domain types must not depend on herodot
+            - pkg: web-app-template-core/internal/db/sqlc
+              desc: Domain types must not depend on sqlc; map rows in the repository
+            - pkg: github.com/jackc/pgx
+              desc: Domain types must not depend on pgx; use plain pointers for nullable fields
+        "shared packages do not know features":
+          files:
+            - "**/internal/helper/**"
+            - "**/internal/gen/**"
+            - "**/internal/config/**"
+            - "**/internal/x/**"
+          deny:
+            - pkg: web-app-template-core/internal/features
+              desc: Shared packages must not import features; define a consumer-side interface and wire it in internal/app
 
     embeddedstructfieldcheck:
       # Checks that sync.Mutex and sync.RWMutex are not used as embedded fields.

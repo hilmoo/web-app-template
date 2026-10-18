@@ -2,11 +2,11 @@ import { Alert, Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { getErrorMessage } from "#/shared/lib/errors";
-import { useRegister } from "../api/use-register";
+import { useAuthRegister } from "../api/use-auth-register";
 import { registerSchema, type registerSchemaTypes } from "../schemas";
 
 export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
-  const registerUser = useRegister();
+  const registerUser = useAuthRegister();
   const {
     register,
     handleSubmit,

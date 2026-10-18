@@ -58,7 +58,7 @@ tasks:
   gen-sql:
     desc: Generate SQL code using sqlc
     vars:
-      SQLC_OUT_DIR: internal/gen/sqlc
+      SQLC_OUT_DIR: internal/db/sqlc
       SQLC_GEN_FILES: '"*.sql.go" -o -name "models.go" -o -name "db.go" -o -name
         "copyfrom.go" -o -name "batch.go"'
     cmds:
@@ -68,7 +68,7 @@ tasks:
 
   format-sql:
     desc: "Format SQL files in core"
-    dir: internal/db/sql
+    dir: internal/db/queries
     cmds:
       - for f in *.sql; do pg_format "$f" -o "$f" -t -W 1 --no-space-function;
         done

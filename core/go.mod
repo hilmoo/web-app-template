@@ -8,8 +8,7 @@ require (
 	github.com/caarlos0/env/v11 v11.4.1
 	github.com/golang-migrate/migrate/v4 v4.20.1
 	github.com/google/uuid v1.6.0
-	github.com/hilmoo/gomox v0.0.0-20261006132422-be1c7c83a105
-	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6
+	github.com/hilmoo/gomox v0.0.0-20261018103541-f08e347261d1
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/matthewhartstonge/argon2 v1.6.3
 	github.com/ory/herodot v0.10.8
@@ -24,6 +23,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.30.4 // indirect
 	github.com/google/jsonschema-go v0.4.3 // indirect
+	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect

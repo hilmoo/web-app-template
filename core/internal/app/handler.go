@@ -40,10 +40,22 @@ func Handler(arg helper.HandlerParams) http.Handler {
 var AccessInternalOnly = helper.AccessPolicy{} //nolint:gochecknoglobals // static policy table
 
 func RegisterConnect(handleArg helper.HandlerParams, mux *http.ServeMux) []string {
+	authBundle := auth.Provide(auth.Deps{
+		Pool:     handleArg.Pool,
+		Validate: handleArg.Validate,
+		Secret:   handleArg.Config.Secret,
+		IsProd:   handleArg.Config.IsProd,
+	})
+
 	opts := []connect.HandlerOption{
 		connect.WithInterceptors(
 			mlog.ConnectLogger(handleArg.Logger),
-			helper.NewAuthInterceptor(handleArg, auth.Access, AccessInternalOnly),
+			helper.NewAuthInterceptor(
+				handleArg,
+				authBundle.Svc,
+				auth.Access,
+				AccessInternalOnly,
+			),
 		),
 	}
 	if handleArg.Config.IsProd {
@@ -69,7 +81,7 @@ func RegisterConnect(handleArg helper.HandlerParams, mux *http.ServeMux) []strin
 		serviceNames = append(serviceNames, strings.Trim(path, "/"))
 	}
 
-	register(servicesv1connect.NewAuthServiceHandler(auth.NewConnect(handleArg), opts...))
+	register(servicesv1connect.NewAuthServiceHandler(authBundle.Handler, opts...))
 
 	reflector := grpcreflect.NewStaticReflector(serviceNames...)
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))

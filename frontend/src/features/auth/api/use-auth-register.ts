@@ -1,11 +1,11 @@
 import { useMutation } from "@connectrpc/connect-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { AuthService } from "proto/servicesV1";
-import { setMe } from "./me";
+import { setAuthMe } from "./use-auth-me";
 
-export function useRegister() {
+export function useAuthRegister() {
   const queryClient = useQueryClient();
   return useMutation(AuthService.method.authRegister, {
-    onSuccess: (res) => setMe(queryClient, res.data),
+    onSuccess: (res) => setAuthMe(queryClient, res.data),
   });
 }

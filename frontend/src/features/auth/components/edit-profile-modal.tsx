@@ -3,13 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { getErrorMessage } from "#/shared/lib/errors";
-import { useMe } from "../api/me";
-import { useUpdateMe } from "../api/use-update-me";
+import { useAuthMe } from "../api/use-auth-me";
+import { useAuthUpdateMe } from "../api/use-auth-update-me";
 import { updateMeSchema, type updateMeSchemaTypes } from "../schemas";
 
 function ProfileForm({ onClose }: { onClose: () => void }) {
-  const { data: user } = useMe();
-  const update = useUpdateMe();
+  const { data: user } = useAuthMe();
+  const update = useAuthUpdateMe();
   const {
     register,
     handleSubmit,
