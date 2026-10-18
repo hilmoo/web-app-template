@@ -3,23 +3,9 @@ package auth
 import (
 	"net"
 	"net/http"
-	modelsv1 "proto/models/v1"
 
-	"github.com/matthewhartstonge/argon2"
-	"google.golang.org/protobuf/types/known/timestamppb"
-
-	db "web-app-template-core/internal/db/sqlc"
 	"web-app-template-core/internal/helper"
 )
-
-func hashPasswordArgon(plain string) (string, error) {
-	argon := argon2.DefaultConfig()
-	hash, err := argon.HashEncoded([]byte(plain))
-	if err != nil {
-		return "", err
-	}
-	return string(hash), nil
-}
 
 func peerIP(addr string) *string {
 	host, _, err := net.SplitHostPort(addr)
@@ -61,13 +47,4 @@ func clearSessionCookie(h http.Header, isProd bool) {
 		Secure:   isProd,
 		SameSite: http.SameSiteLaxMode,
 	}).String())
-}
-
-func toMeUser(u db.User) *modelsv1.AuthMeUser {
-	return &modelsv1.AuthMeUser{
-		Id:        u.ID.String(),
-		Email:     u.Email,
-		FullName:  u.FullName,
-		CreatedAt: timestamppb.New(u.CreatedAt),
-	}
 }

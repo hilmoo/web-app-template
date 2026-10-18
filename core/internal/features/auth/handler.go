@@ -5,37 +5,26 @@ import (
 	servicesv1 "proto/services/v1"
 	"proto/services/v1/servicesv1connect"
 
-	db "web-app-template-core/internal/db/sqlc"
 	"web-app-template-core/internal/helper"
 
 	"connectrpc.com/connect"
-	"github.com/google/uuid"
 	errort "github.com/hilmoo/gomox/transport/error"
 	"github.com/hilmoo/gomox/transport/validation"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ory/herodot"
 )
 
 type connectHandler struct {
 	servicesv1connect.UnimplementedAuthServiceHandler
 
+	svc      Service
 	validate *validation.Vld
-	pool     *pgxpool.Pool
-	queries  *db.Queries
-	secret   string
 	isProd   bool
 }
 
 var _ servicesv1connect.AuthServiceHandler = (*connectHandler)(nil)
 
-func NewConnect(arg helper.HandlerParams) servicesv1connect.AuthServiceHandler {
-	return &connectHandler{
-		validate: arg.Validate,
-		pool:     arg.Pool,
-		queries:  arg.Queries,
-		secret:   arg.Config.Secret,
-		isProd:   arg.Config.IsProd,
-	}
+func NewHandler(svc Service, validate *validation.Vld, isProd bool) servicesv1connect.AuthServiceHandler {
+	return &connectHandler{svc: svc, validate: validate, isProd: isProd}
 }
 
 func (h *connectHandler) AuthLogin(
@@ -46,27 +35,21 @@ func (h *connectHandler) AuthLogin(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-
-	err := h.validate.ValidatePayload(req)
-	if err != nil {
-		return nil, errort.ConnectError(ctx, herodot.ErrBadRequest.WithReason("invalid request").WithDebug(err.Error()))
-	}
-
-	resp, errH := passwordLoginService(ctx, passwordLoginServiceParams{
-		queries:   h.queries,
-		secret:    h.secret,
-		in:        req,
-		ipAddress: peerIP(callInfo.Peer().Addr),
-		userAgent: strPtr(callInfo.RequestHeader().Get("User-Agent")),
-	})
-	if errH != nil {
+	if errH = h.validate.ValidatePayload(req); errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
 
-	setSessionCookie(callInfo.ResponseHeader(), resp.token, h.isProd)
-	return &servicesv1.AuthLoginResponse{
-		Data: toMeUser(resp.user),
-	}, nil
+	res, err := h.svc.Login(ctx, LoginInput{
+		Email:    req.GetEmail(),
+		Password: req.GetPassword(),
+		Meta:     sessionMeta(callInfo),
+	})
+	if err != nil {
+		return nil, toConnectError(ctx, err)
+	}
+
+	setSessionCookie(callInfo.ResponseHeader(), res.Token, h.isProd)
+	return &servicesv1.AuthLoginResponse{Data: toProtoMeUser(res.User)}, nil
 }
 
 func (h *connectHandler) AuthRegister(
@@ -77,25 +60,22 @@ func (h *connectHandler) AuthRegister(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-
 	if errH = h.validate.ValidatePayload(req); errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
 
-	resp, errH := passwordRegisterService(ctx, passwordRegisterServiceParams{
-		pool:      h.pool,
-		queries:   h.queries,
-		secret:    h.secret,
-		in:        req,
-		ipAddress: peerIP(callInfo.Peer().Addr),
-		userAgent: strPtr(callInfo.RequestHeader().Get("User-Agent")),
+	res, err := h.svc.Register(ctx, RegisterInput{
+		Email:    req.GetEmail(),
+		FullName: req.GetFullName(),
+		Password: req.GetPassword(),
+		Meta:     sessionMeta(callInfo),
 	})
-	if errH != nil {
-		return nil, errort.ConnectError(ctx, errH)
+	if err != nil {
+		return nil, toConnectError(ctx, err)
 	}
 
-	setSessionCookie(callInfo.ResponseHeader(), resp.token, h.isProd)
-	return &servicesv1.AuthRegisterResponse{Data: toMeUser(resp.user)}, nil
+	setSessionCookie(callInfo.ResponseHeader(), res.Token, h.isProd)
+	return &servicesv1.AuthRegisterResponse{Data: toProtoMeUser(res.User)}, nil
 }
 
 func (h *connectHandler) AuthLogout(
@@ -106,19 +86,14 @@ func (h *connectHandler) AuthLogout(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-
+	// Transport work on the raw token: logout deletes the session the cookie names.
 	token, errH := helper.SessionTokenFromHeader(callInfo.RequestHeader())
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
 
-	errH = passwordLogoutService(ctx, passwordLogoutServiceParams{
-		queries: h.queries,
-		secret:  h.secret,
-		token:   token,
-	})
-	if errH != nil {
-		return nil, errort.ConnectError(ctx, errH)
+	if err := h.svc.Logout(ctx, token); err != nil {
+		return nil, toConnectError(ctx, err)
 	}
 
 	clearSessionCookie(callInfo.ResponseHeader(), h.isProd)
@@ -129,32 +104,40 @@ func (h *connectHandler) AuthMe(
 	ctx context.Context,
 	_ *servicesv1.AuthMeRequest,
 ) (*servicesv1.AuthMeResponse, error) {
-	return helper.WithUserID(ctx, func(userID uuid.UUID) (*servicesv1.AuthMeResponse, *herodot.DefaultError) {
-		user, errH := meGetUser(ctx, h.queries, userID)
-		if errH != nil {
-			return nil, errH
-		}
+	userID, errH := helper.UserIDFromContext(ctx)
+	if errH != nil {
+		return nil, errort.ConnectError(ctx, errH)
+	}
 
-		return &servicesv1.AuthMeResponse{Data: toMeUser(user)}, nil
-	})
+	user, err := h.svc.Me(ctx, userID)
+	if err != nil {
+		return nil, toConnectError(ctx, err)
+	}
+
+	return &servicesv1.AuthMeResponse{Data: toProtoMeUser(user)}, nil
 }
 
 func (h *connectHandler) AuthUpdateMe(
 	ctx context.Context,
 	req *servicesv1.AuthUpdateMeRequest,
 ) (*servicesv1.AuthUpdateMeResponse, error) {
-	return helper.WithUserID(ctx, func(userID uuid.UUID) (*servicesv1.AuthUpdateMeResponse, *herodot.DefaultError) {
-		updated, errH := meUpdateUserService(ctx, meUpdateUserServiceParams{
-			queries: h.queries,
-			userID:  userID,
-			in:      req,
-		})
-		if errH != nil {
-			return nil, errH
-		}
+	userID, errH := helper.UserIDFromContext(ctx)
+	if errH != nil {
+		return nil, errort.ConnectError(ctx, errH)
+	}
+	if errH = h.validate.ValidatePayload(req); errH != nil {
+		return nil, errort.ConnectError(ctx, errH)
+	}
 
-		return &servicesv1.AuthUpdateMeResponse{Data: toMeUser(updated)}, nil
+	user, err := h.svc.UpdateMe(ctx, userID, UpdateMeInput{
+		Email:    req.Email,
+		FullName: req.FullName,
 	})
+	if err != nil {
+		return nil, toConnectError(ctx, err)
+	}
+
+	return &servicesv1.AuthUpdateMeResponse{Data: toProtoMeUser(user)}, nil
 }
 
 func handlerCallInfo(ctx context.Context) (connect.CallInfo, *herodot.DefaultError) {
@@ -163,4 +146,11 @@ func handlerCallInfo(ctx context.Context) (connect.CallInfo, *herodot.DefaultErr
 		return nil, herodot.ErrInternalServerError.WithReason("missing request metadata")
 	}
 	return callInfo, nil
+}
+
+func sessionMeta(callInfo connect.CallInfo) SessionMeta {
+	return SessionMeta{
+		IPAddress: peerIP(callInfo.Peer().Addr),
+		UserAgent: strPtr(callInfo.RequestHeader().Get("User-Agent")),
+	}
 }

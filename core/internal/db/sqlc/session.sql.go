@@ -12,12 +12,12 @@ import (
 	"github.com/google/uuid"
 )
 
-const sessionCreateNew = `-- name: SessionCreateNew :exec
+const createSession = `-- name: CreateSession :exec
 INSERT INTO sessions("user_id", "token_hash", "expires_at", "ip_address", "user_agent")
     VALUES ($1, $2, $3, $4, $5)
 `
 
-type SessionCreateNewParams struct {
+type CreateSessionParams struct {
 	UserID    uuid.UUID `json:"user_id"`
 	TokenHash string    `json:"token_hash"`
 	ExpiresAt time.Time `json:"expires_at"`
@@ -25,8 +25,8 @@ type SessionCreateNewParams struct {
 	UserAgent *string   `json:"user_agent"`
 }
 
-func (q *Queries) SessionCreateNew(ctx context.Context, arg SessionCreateNewParams) error {
-	_, err := q.db.Exec(ctx, sessionCreateNew,
+func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) error {
+	_, err := q.db.Exec(ctx, createSession,
 		arg.UserID,
 		arg.TokenHash,
 		arg.ExpiresAt,
@@ -36,47 +36,56 @@ func (q *Queries) SessionCreateNew(ctx context.Context, arg SessionCreateNewPara
 	return err
 }
 
-const sessionDeleteById = `-- name: SessionDeleteById :exec
+const deleteSession = `-- name: DeleteSession :execrows
 DELETE FROM sessions
 WHERE "id" = $1
     AND "user_id" = $2
 `
 
-type SessionDeleteByIdParams struct {
+type DeleteSessionParams struct {
 	ID     uuid.UUID `json:"id"`
 	UserID uuid.UUID `json:"user_id"`
 }
 
-func (q *Queries) SessionDeleteById(ctx context.Context, arg SessionDeleteByIdParams) error {
-	_, err := q.db.Exec(ctx, sessionDeleteById, arg.ID, arg.UserID)
-	return err
+func (q *Queries) DeleteSession(ctx context.Context, arg DeleteSessionParams) (int64, error) {
+	result, err := q.db.Exec(ctx, deleteSession, arg.ID, arg.UserID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected(), nil
 }
 
-const sessionDeleteByTokenHash = `-- name: SessionDeleteByTokenHash :exec
+const deleteSessionByTokenHash = `-- name: DeleteSessionByTokenHash :exec
 DELETE FROM sessions
 WHERE "token_hash" = $1
 `
 
-func (q *Queries) SessionDeleteByTokenHash(ctx context.Context, tokenHash string) error {
-	_, err := q.db.Exec(ctx, sessionDeleteByTokenHash, tokenHash)
+func (q *Queries) DeleteSessionByTokenHash(ctx context.Context, tokenHash string) error {
+	_, err := q.db.Exec(ctx, deleteSessionByTokenHash, tokenHash)
 	return err
 }
 
-const sessionGetById = `-- name: SessionGetById :one
-SELECT id, user_id, token_hash, user_agent, ip_address, expires_at, created_at
+const getSession = `-- name: GetSession :one
+SELECT "id",
+    "user_id",
+    "token_hash",
+    "user_agent",
+    "ip_address",
+    "expires_at",
+    "created_at"
 FROM sessions
 WHERE "id" = $1
     AND "expires_at" > NOW()
     AND "user_id" = $2
 `
 
-type SessionGetByIdParams struct {
+type GetSessionParams struct {
 	ID     uuid.UUID `json:"id"`
 	UserID uuid.UUID `json:"user_id"`
 }
 
-func (q *Queries) SessionGetById(ctx context.Context, arg SessionGetByIdParams) (Session, error) {
-	row := q.db.QueryRow(ctx, sessionGetById, arg.ID, arg.UserID)
+func (q *Queries) GetSession(ctx context.Context, arg GetSessionParams) (Session, error) {
+	row := q.db.QueryRow(ctx, getSession, arg.ID, arg.UserID)
 	var i Session
 	err := row.Scan(
 		&i.ID,
@@ -90,15 +99,21 @@ func (q *Queries) SessionGetById(ctx context.Context, arg SessionGetByIdParams) 
 	return i, err
 }
 
-const sessionGetByTokenHash = `-- name: SessionGetByTokenHash :one
-SELECT id, user_id, token_hash, user_agent, ip_address, expires_at, created_at
+const getSessionByTokenHash = `-- name: GetSessionByTokenHash :one
+SELECT "id",
+    "user_id",
+    "token_hash",
+    "user_agent",
+    "ip_address",
+    "expires_at",
+    "created_at"
 FROM sessions
 WHERE "token_hash" = $1
     AND "expires_at" > NOW()
 `
 
-func (q *Queries) SessionGetByTokenHash(ctx context.Context, tokenHash string) (Session, error) {
-	row := q.db.QueryRow(ctx, sessionGetByTokenHash, tokenHash)
+func (q *Queries) GetSessionByTokenHash(ctx context.Context, tokenHash string) (Session, error) {
+	row := q.db.QueryRow(ctx, getSessionByTokenHash, tokenHash)
 	var i Session
 	err := row.Scan(
 		&i.ID,
@@ -112,8 +127,14 @@ func (q *Queries) SessionGetByTokenHash(ctx context.Context, tokenHash string) (
 	return i, err
 }
 
-const sessionListByUserId = `-- name: SessionListByUserId :many
-SELECT id, user_id, token_hash, user_agent, ip_address, expires_at, created_at
+const listSessionsByUser = `-- name: ListSessionsByUser :many
+SELECT "id",
+    "user_id",
+    "token_hash",
+    "user_agent",
+    "ip_address",
+    "expires_at",
+    "created_at"
 FROM sessions
 WHERE "user_id" = $1
     AND "expires_at" > NOW()
@@ -123,14 +144,14 @@ ORDER BY "id" DESC
 LIMIT $2
 `
 
-type SessionListByUserIdParams struct {
+type ListSessionsByUserParams struct {
 	UserID uuid.UUID  `json:"user_id"`
 	Limit  int32      `json:"limit"`
 	Cursor *uuid.UUID `json:"cursor"`
 }
 
-func (q *Queries) SessionListByUserId(ctx context.Context, arg SessionListByUserIdParams) ([]Session, error) {
-	rows, err := q.db.Query(ctx, sessionListByUserId, arg.UserID, arg.Limit, arg.Cursor)
+func (q *Queries) ListSessionsByUser(ctx context.Context, arg ListSessionsByUserParams) ([]Session, error) {
+	rows, err := q.db.Query(ctx, listSessionsByUser, arg.UserID, arg.Limit, arg.Cursor)
 	if err != nil {
 		return nil, err
 	}

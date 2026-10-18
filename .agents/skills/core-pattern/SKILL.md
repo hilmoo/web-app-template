@@ -112,11 +112,3 @@ repository── sqlc calls, transactions (helper.WithTx), row → domain;
 | [references/interceptor-wiring.md](references/interceptor-wiring.md) | Mux layout, interceptor chain, access policy, user context, consumer-side interfaces |
 | [references/response-shape.md](references/response-shape.md) | Proto response shape, pagination, Connect error wire format |
 | [references/cache-event-patterns.md](references/cache-event-patterns.md) | Future: Redis cache-aside and in-process event bus |
-
-## Migration Status
-
-The pattern above is the target. Code written before it still deviates — migrate it when you touch it:
-
-- `features/auth` services return `*herodot.DefaultError`, take proto requests, call sqlc directly, and are wired with `auth.NewConnect(helper.HandlerParams)` instead of `Deps`/`Provide`.
-- `helper.WithTx` and `helper.WithUserID` take callbacks returning `*herodot.DefaultError`; the target signatures return `error` (see error-flow.md).
-- `queries/user.sql` and `queries/session.sql` use `EntityVerb` names (`UserGetById`) and `SELECT *`; new queries use `VerbEntity` names and explicit columns.

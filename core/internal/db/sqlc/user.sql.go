@@ -11,20 +11,20 @@ import (
 	"github.com/google/uuid"
 )
 
-const userCreatePassword = `-- name: UserCreatePassword :one
+const createUser = `-- name: CreateUser :one
 INSERT INTO users("email", "full_name", "password_hash")
     VALUES ($1, $2, $3)
-RETURNING id, email, password_hash, full_name, created_at
+RETURNING "id", "email", "password_hash", "full_name", "created_at"
 `
 
-type UserCreatePasswordParams struct {
+type CreateUserParams struct {
 	Email        string  `json:"email"`
 	FullName     string  `json:"full_name"`
 	PasswordHash *string `json:"password_hash"`
 }
 
-func (q *Queries) UserCreatePassword(ctx context.Context, arg UserCreatePasswordParams) (User, error) {
-	row := q.db.QueryRow(ctx, userCreatePassword, arg.Email, arg.FullName, arg.PasswordHash)
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, createUser, arg.Email, arg.FullName, arg.PasswordHash)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -36,33 +36,18 @@ func (q *Queries) UserCreatePassword(ctx context.Context, arg UserCreatePassword
 	return i, err
 }
 
-const userGetByEmail = `-- name: UserGetByEmail :one
-SELECT id, email, password_hash, full_name, created_at
-FROM users
-WHERE "email" = $1
-`
-
-func (q *Queries) UserGetByEmail(ctx context.Context, email string) (User, error) {
-	row := q.db.QueryRow(ctx, userGetByEmail, email)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Email,
-		&i.PasswordHash,
-		&i.FullName,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const userGetById = `-- name: UserGetById :one
-SELECT id, email, password_hash, full_name, created_at
+const getUser = `-- name: GetUser :one
+SELECT "id",
+    "email",
+    "password_hash",
+    "full_name",
+    "created_at"
 FROM users
 WHERE "id" = $1
 `
 
-func (q *Queries) UserGetById(ctx context.Context, id uuid.UUID) (User, error) {
-	row := q.db.QueryRow(ctx, userGetById, id)
+func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (User, error) {
+	row := q.db.QueryRow(ctx, getUser, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -74,25 +59,52 @@ func (q *Queries) UserGetById(ctx context.Context, id uuid.UUID) (User, error) {
 	return i, err
 }
 
-const userUpdate = `-- name: UserUpdate :one
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT "id",
+    "email",
+    "password_hash",
+    "full_name",
+    "created_at"
+FROM users
+WHERE "email" = $1
+`
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.PasswordHash,
+		&i.FullName,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateUser = `-- name: UpdateUser :one
 UPDATE
     users
 SET "email" = COALESCE($2, "email"),
     "full_name" = COALESCE($3, "full_name"),
     "password_hash" = COALESCE($4, "password_hash")
 WHERE "id" = $1
-RETURNING id, email, password_hash, full_name, created_at
+RETURNING "id",
+    "email",
+    "password_hash",
+    "full_name",
+    "created_at"
 `
 
-type UserUpdateParams struct {
+type UpdateUserParams struct {
 	ID           uuid.UUID `json:"id"`
 	Email        *string   `json:"email"`
 	FullName     *string   `json:"full_name"`
 	PasswordHash *string   `json:"password_hash"`
 }
 
-func (q *Queries) UserUpdate(ctx context.Context, arg UserUpdateParams) (User, error) {
-	row := q.db.QueryRow(ctx, userUpdate,
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUser,
 		arg.ID,
 		arg.Email,
 		arg.FullName,
