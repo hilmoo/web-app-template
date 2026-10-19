@@ -10,8 +10,8 @@
 
 syntax = "proto3";
 
-package services.v1;
-option go_package = "proto/services/v1;servicesv1";
+package services.core.v1;
+option go_package = "proto/services/core/v1;corev1";
 
 import "models/v1/auth_me_user.proto";
 

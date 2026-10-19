@@ -2,8 +2,8 @@ package auth
 
 import (
 	"context"
-	servicesv1 "proto/services/v1"
-	"proto/services/v1/servicesv1connect"
+	servicesv1 "proto/services/core/v1"
+	"proto/services/core/v1/corev1connect"
 
 	"web-app-template-core/internal/helper"
 
@@ -14,16 +14,16 @@ import (
 )
 
 type connectHandler struct {
-	servicesv1connect.UnimplementedAuthServiceHandler
+	corev1connect.UnimplementedAuthServiceHandler
 
 	svc      Service
 	validate *validation.Vld
 	isProd   bool
 }
 
-var _ servicesv1connect.AuthServiceHandler = (*connectHandler)(nil)
+var _ corev1connect.AuthServiceHandler = (*connectHandler)(nil)
 
-func NewHandler(svc Service, validate *validation.Vld, isProd bool) servicesv1connect.AuthServiceHandler {
+func NewHandler(svc Service, validate *validation.Vld, isProd bool) corev1connect.AuthServiceHandler {
 	return &connectHandler{svc: svc, validate: validate, isProd: isProd}
 }
 

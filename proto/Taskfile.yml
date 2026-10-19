@@ -16,7 +16,9 @@ tasks:
   gen-go-inject-tags:
     desc: "Inject go tags (validate:...) into protobuf files"
     cmds:
-      - for d in models/v1 services/v1; do (cd gen/go/$d && protoc-go-inject-tag -input="*.pb.go"); done
+      - |
+        find gen/go/models gen/go/services -name '*.pb.go' -print0 \
+          | xargs -0 -n1 protoc-go-inject-tag -input
 
   build-typescript:
     desc: build typescript code

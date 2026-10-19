@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"proto/services/v1/servicesv1connect"
+	"proto/services/core/v1/corev1connect"
 
 	"github.com/hilmoo/gomox/transport/validation"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -17,7 +17,7 @@ type Deps struct {
 // Bundle exposes the service too: internal/app passes it to the auth interceptor
 // as its helper.SessionResolver.
 type Bundle struct {
-	Handler servicesv1connect.AuthServiceHandler
+	Handler corev1connect.AuthServiceHandler
 	Svc     Service
 }
 

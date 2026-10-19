@@ -2,7 +2,7 @@ import { create } from "@bufbuild/protobuf";
 import { ConnectError, Code, type Transport } from "@connectrpc/connect";
 import { createConnectQueryKey, createQueryOptions, useQuery } from "@connectrpc/connect-query";
 import type { QueryClient } from "@tanstack/react-query";
-import { AuthMeResponseSchema, AuthService } from "proto/servicesV1";
+import { AuthMeResponseSchema, AuthService } from "proto/servicesCoreV1";
 import type { AuthMeUser } from "proto/modelsV1";
 
 const authMe = AuthService.method.authMe;

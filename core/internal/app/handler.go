@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"proto/services/v1/servicesv1connect"
+	"proto/services/core/v1/corev1connect"
 
 	"web-app-template-core/internal/features/auth"
 	"web-app-template-core/internal/features/health"
@@ -81,7 +81,7 @@ func RegisterConnect(handleArg helper.HandlerParams, mux *http.ServeMux) []strin
 		serviceNames = append(serviceNames, strings.Trim(path, "/"))
 	}
 
-	register(servicesv1connect.NewAuthServiceHandler(authBundle.Handler, opts...))
+	register(corev1connect.NewAuthServiceHandler(authBundle.Handler, opts...))
 
 	reflector := grpcreflect.NewStaticReflector(serviceNames...)
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))

@@ -54,7 +54,7 @@
 					"--stdin"
 				],
 				"go.alternateTools": {
-					"customFormatter": "golangci-lint-v2",
+					"customFormatter": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/golangci-lint",
 					"golangci-lint-v2": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/golangci-lint",
 					"gopls": "${containerWorkspaceFolder}/.devbox/nix/profile/default/bin/gopls"
 				},

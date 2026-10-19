@@ -1,6 +1,6 @@
 import { useMutation } from "@connectrpc/connect-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { AuthService } from "proto/servicesV1";
+import { AuthService } from "proto/servicesCoreV1";
 import { setAuthMe } from "./use-auth-me";
 
 export function useAuthUpdateMe() {

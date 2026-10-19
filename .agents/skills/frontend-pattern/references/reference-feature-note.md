@@ -18,18 +18,18 @@ Generated names follow the TypeSpec models. Check the generated file before impo
 
 Dependencies point down. Write top to bottom and each file typechecks against the previous ones.
 
-| # | File | One-line job |
-|---|---|---|
-| 1 | `api/use-note-list.ts` | Query hook + `noteListQueryKey` |
-| 2 | `api/use-note-create.ts` | Mutation, invalidates the list |
-| 3 | `api/use-note-delete.ts` | Mutation, invalidates the list |
-| 4 | `schemas.ts` | `noteCreateSchema` from the orval body + UI messages |
-| 5 | `components/note-create-form.tsx` | Form: zod resolver, error alert, reset on success |
-| 6 | `components/note-list.tsx` | Renders the list, delete button per row |
-| 7 | `pages/notes-page.tsx` | Composes form + list inside `AppShell` |
-| 8 | `index.ts` | Exports `NotesPage` only |
-| 9 | `src/routes/notes.tsx` | `createFileRoute("/notes")` with `requireAuth` |
-| 10 | `schemas.test.ts` | Schema accepts valid, rejects empty with the friendly message |
+| #   | File                              | One-line job                                                  |
+| --- | --------------------------------- | ------------------------------------------------------------- |
+| 1   | `api/use-note-list.ts`            | Query hook + `noteListQueryKey`                               |
+| 2   | `api/use-note-create.ts`          | Mutation, invalidates the list                                |
+| 3   | `api/use-note-delete.ts`          | Mutation, invalidates the list                                |
+| 4   | `schemas.ts`                      | `noteCreateSchema` from the orval body + UI messages          |
+| 5   | `components/note-create-form.tsx` | Form: zod resolver, error alert, reset on success             |
+| 6   | `components/note-list.tsx`        | Renders the list, delete button per row                       |
+| 7   | `pages/notes-page.tsx`            | Composes form + list inside `AppShell`                        |
+| 8   | `index.ts`                        | Exports `NotesPage` only                                      |
+| 9   | `src/routes/notes.tsx`            | `createFileRoute("/notes")` with `requireAuth`                |
+| 10  | `schemas.test.ts`                 | Schema accepts valid, rejects empty with the friendly message |
 
 `NoteGet` gets a hook when a page needs it (e.g. `/notes/$id`). Do not write hooks for RPCs no
 component calls yet.
@@ -38,7 +38,7 @@ component calls yet.
 
 ```ts
 import { createConnectQueryKey, useQuery } from "@connectrpc/connect-query";
-import { NoteService } from "proto/servicesV1";
+import { NoteService } from "proto/servicesCoreV1";
 
 const noteList = NoteService.method.noteList;
 
@@ -58,7 +58,7 @@ what invalidation wants.
 ```ts
 import { useMutation } from "@connectrpc/connect-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { NoteService } from "proto/servicesV1";
+import { NoteService } from "proto/servicesCoreV1";
 import { noteListQueryKey } from "./use-note-list";
 
 export function useNoteCreate() {
@@ -72,7 +72,7 @@ export function useNoteCreate() {
 ## 3. `api/use-note-delete.ts`
 
 Same shape as create, with `NoteService.method.noteDelete`. Even when a hook is this thin it
-stays a file of its own (see *Every RPC has an api hook* in SKILL.md).
+stays a file of its own (see _Every RPC has an api hook_ in SKILL.md).
 
 ## 4. `schemas.ts`
 
@@ -122,7 +122,13 @@ export function NoteCreateForm() {
           </Alert>
         )}
         <TextInput label="Title" error={errors.title?.message} {...register("title")} />
-        <Textarea label="Body" autosize minRows={3} error={errors.body?.message} {...register("body")} />
+        <Textarea
+          label="Body"
+          autosize
+          minRows={3}
+          error={errors.body?.message}
+          {...register("body")}
+        />
         <Button type="submit" loading={create.isPending}>
           Add note
         </Button>

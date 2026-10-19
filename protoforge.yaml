@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/hilmoo/protoforge/refs/tags/v0.0.1/schema/protoforge.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/hilmoo/protoforge/refs/tags/v0.0.4/schema/protoforge.schema.json
 
 version: 1
 
@@ -18,7 +18,6 @@ migration:
 # drizzle schema -> TypeSpec models, TypeSpec -> OpenAPI
 typespec:
   dir: openapi
-  entry: ./src
   from_drizzle:
     schema_dir: ../migration/src/schema
     out: src/_generated/db.tsp
@@ -38,3 +37,8 @@ proto:
     enabled: true
     commands:
       - task
+
+specs:
+  core:
+    entry: ./src
+    output: openapi.json

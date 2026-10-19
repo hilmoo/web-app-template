@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"proto/services/v1/servicesv1connect"
+	"proto/services/core/v1/corev1connect"
 
 	"web-app-template-core/internal/helper"
 )
@@ -10,6 +10,6 @@ import (
 //
 //nolint:gochecknoglobals // static policy table
 var Access = helper.AccessPolicy{
-	servicesv1connect.AuthServiceAuthLoginProcedure:    helper.AccessPublic,
-	servicesv1connect.AuthServiceAuthRegisterProcedure: helper.AccessPublic,
+	corev1connect.AuthServiceAuthLoginProcedure:    helper.AccessPublic,
+	corev1connect.AuthServiceAuthRegisterProcedure: helper.AccessPublic,
 }
