@@ -27,4 +27,4 @@ proto/gen/typescript/index.d.ts
 proto/gen/typescript/namespaces/
 
 # Taskfile remote
-.task/
+.task/remote/
