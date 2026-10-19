@@ -31,7 +31,6 @@
   ],
   "shell": {
     "init_hook": [
-      "export DEVBOX_SEARCH_HOST=https://www.nixsearch.com",
       ". ./init-hook.sh"
     ]
   },
