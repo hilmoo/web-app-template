@@ -12,8 +12,10 @@ devbox install
 # node stuff
 devbox run pnpm install
 
-# other stuff
-devbox run lefthook install
+# lefthook
+if [ -d .git ]; then
+  devbox run lefthook install
+fi
 
 # protoforge (drizzle -> typespec -> openapi -> proto)
 PROTOFORGE_VERSION=0.0.4
@@ -21,4 +23,4 @@ curl -L "https://github.com/hilmoo/protoforge/releases/download/v${PROTOFORGE_VE
 
 direnv reload
 
-perl -0pi -e 's/,(\s*[}\]])/$1/g' devbox.jsonc
+perl -0pi -e 's/,(\s*[}\]])/$1/g' devbox.jsonc # vscode complains about trailing commas in devbox.jsonc, so remove them
