@@ -61,11 +61,11 @@ Generated files are committed and marked `linguist-generated`. Edit the **source
 
 ## Getting started
 
-1. Scaffold (also replaces the `web-app-template` placeholder everywhere):
+1. Scaffold (the script prompts for the project name, replaces the `web-app-template` placeholder everywhere, and sets up `.devcontainer/.env`):
    ```bash
    npx degit hilmoo/web-app-template my-new-app
    cd my-new-app
-   scripts/rename.sh my-new-app && rm scripts/rename.sh
+   scripts/init.sh   # prompts for the project name and devcontainer nix setup, then deletes itself
    git init && git add -A && git commit -m "init"
    ```
 2. Open in the devcontainer (installs devbox, pnpm deps, git hooks, protoforge and creates `.env`). Without it: `devbox shell`, `pnpm install`, `cp .env.example .env`.
