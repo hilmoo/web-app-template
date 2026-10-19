@@ -3,7 +3,7 @@ module web-app-template-core
 go 1.27.2
 
 require (
-	connectrpc.com/connect v1.21.0
+	connectrpc.com/connect v1.21.1
 	connectrpc.com/grpcreflect v1.3.1
 	github.com/caarlos0/env/v11 v11.4.1
 	github.com/golang-migrate/migrate/v4 v4.20.1
