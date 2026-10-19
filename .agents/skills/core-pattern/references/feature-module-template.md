@@ -349,7 +349,7 @@ func (h *connectHandler) <Feature>Get(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-	id, errH := helper.StrToUUIDHTTP(req.GetId())
+	id, errH := helper.StrToUUIDHTTP(req.Get<Feature>Id())
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
@@ -393,7 +393,7 @@ func (h *connectHandler) <Feature>Delete(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-	id, errH := helper.StrToUUIDHTTP(req.GetId())
+	id, errH := helper.StrToUUIDHTTP(req.Get<Feature>Id())
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}

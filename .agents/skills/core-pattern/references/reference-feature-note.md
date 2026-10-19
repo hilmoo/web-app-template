@@ -314,7 +314,7 @@ func (h *connectHandler) NoteGet(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-	id, errH := helper.StrToUUIDHTTP(req.GetId())
+	id, errH := helper.StrToUUIDHTTP(req.GetNoteId())
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
@@ -350,7 +350,7 @@ func (h *connectHandler) NoteDelete(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-	id, errH := helper.StrToUUIDHTTP(req.GetId())
+	id, errH := helper.StrToUUIDHTTP(req.GetNoteId())
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}

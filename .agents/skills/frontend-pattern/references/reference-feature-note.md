@@ -174,10 +174,10 @@ export function NoteList() {
             <Button
               color="red"
               variant="subtle"
-              loading={remove.isPending && remove.variables?.id === note.id}
+              loading={remove.isPending && remove.variables?.noteId === note.id}
               onClick={() =>
                 remove.mutate(
-                  { id: note.id },
+                  { noteId: note.id },
                   {
                     onError: (err) =>
                       notifications.show({ message: getErrorMessage(err), color: "red" }),
