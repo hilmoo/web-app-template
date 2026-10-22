@@ -18,7 +18,7 @@ if [ -d .git ]; then
 fi
 
 # protoforge (drizzle -> typespec -> openapi -> proto)
-PROTOFORGE_VERSION=0.0.4
+PROTOFORGE_VERSION=0.0.6
 curl -L "https://github.com/hilmoo/protoforge/releases/download/v${PROTOFORGE_VERSION}/protoforge_${PROTOFORGE_VERSION}_linux_amd64.tar.gz" | tar -xz -C /tmp && sudo install -m 755 /tmp/protoforge /usr/local/bin/protoforge
 
 direnv reload
