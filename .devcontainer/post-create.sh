@@ -9,6 +9,9 @@ devbox install
 
 [ -f .env ] || cp .env.example .env
 
+# go stuff
+devbox run go work sync
+
 # node stuff
 devbox run pnpm install
 
