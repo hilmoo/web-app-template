@@ -31,7 +31,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "rollup": "^4.64.7",
+    "rollup": "^4.65.0",
     "rollup-plugin-dts": "^6.5.1"
   },
   "private": true
