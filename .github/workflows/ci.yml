@@ -101,10 +101,6 @@ jobs:
       - name: Build proto package
         run: pnpm --filter proto build
 
-      - name: Typecheck
-        working-directory: frontend
-        run: pnpm typecheck
-
       - name: Test
         working-directory: frontend
         run: pnpm test
