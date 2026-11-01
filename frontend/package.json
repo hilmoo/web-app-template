@@ -17,7 +17,7 @@
     "@connectrpc/connect": "^2.2.0",
     "@connectrpc/connect-query": "^2.3.1",
     "@connectrpc/connect-web": "^2.2.0",
-    "@hookform/resolvers": "^5.9.2",
+    "@hookform/resolvers": "^6.0.2",
     "@mantine/core": "^9.7.3",
     "@mantine/hooks": "^9.7.3",
     "@mantine/modals": "^9.7.3",
