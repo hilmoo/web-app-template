@@ -172,13 +172,13 @@ importers:
         specifier: ^2.16.0
         version: 2.16.0
       '@connectrpc/connect':
-        specifier: ^2.2.0
+        specifier: ^2.3.0
         version: 2.3.0(@bufbuild/protobuf@2.16.0)
       '@connectrpc/connect-query':
         specifier: ^2.3.1
         version: 2.3.1(@bufbuild/protobuf@2.16.0)(@connectrpc/connect@2.3.0(@bufbuild/protobuf@2.16.0))(@tanstack/query-core@5.105.0)(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@connectrpc/connect-web':
-        specifier: ^2.2.0
+        specifier: ^2.3.0
         version: 2.3.0(@bufbuild/protobuf@2.16.0)(@connectrpc/connect@2.3.0(@bufbuild/protobuf@2.16.0))
       '@hookform/resolvers':
         specifier: ^6.0.2
@@ -310,7 +310,7 @@ importers:
         specifier: ^2.16.0
         version: 2.16.0(@bufbuild/protobuf@2.16.0)
       '@connectrpc/connect':
-        specifier: ^2.2.0
+        specifier: ^2.3.0
         version: 2.3.0(@bufbuild/protobuf@2.16.0)
       '@connectrpc/validate':
         specifier: ^0.2.0
