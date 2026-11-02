@@ -211,7 +211,7 @@ importers:
         specifier: ^19.3.1
         version: 19.3.1(react@19.3.1)
       react-hook-form:
-        specifier: ^7.90.0
+        specifier: ^7.91.0
         version: 7.91.0(@types/react@19.3.0)(react@19.3.1)
       zod:
         specifier: ^4.6.7
@@ -323,7 +323,7 @@ importers:
         specifier: ^16.0.3
         version: 16.0.3(rollup@4.67.2)
       rollup:
-        specifier: ^4.65.0
+        specifier: ^4.66.0
         version: 4.67.2
       rollup-plugin-dts:
         specifier: ^6.5.1
