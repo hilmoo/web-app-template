@@ -6,8 +6,8 @@ sortSet:
   sortPathsBy: tags
 casingSet:
   operationId: camelCase
-  properties: snakeCase
-  parameters: snakeCase
+  properties: camelCase
+  parameters: camelCase
   componentsSchemas: PascalCase
   componentsParameters: camelCase
   componentsRequestBodies: PascalCase
