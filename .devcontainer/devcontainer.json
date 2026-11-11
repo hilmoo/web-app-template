@@ -21,7 +21,6 @@
 				"jetpack-io.devbox",
 				"mkhl.direnv",
 				"task.vscode-task",
-				"Anthropic.claude-code",
 				// Go
 				"golang.go",
 				// TypeScript / JS
