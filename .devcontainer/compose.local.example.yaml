@@ -1,0 +1,10 @@
+# Personal compose override (template).
+#
+# On first open, initializeCommand copies this file to .devcontainer/compose.local.yaml
+# (gitignored), which is merged on top of compose.yaml. Edit your copy to mount your own
+# coding agent's config, add env vars, etc. Rebuild the container after changing it.
+# Set workspace.environment.POST_CREATE_LOCAL to run a shell command at the end of
+# post-create.sh.
+
+services:
+  workspace: {}

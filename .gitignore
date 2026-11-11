@@ -16,6 +16,9 @@ coverage/
 .idea/
 .vscode/
 
+# Per-developer devcontainer compose override (created from compose.local.example.yaml)
+.devcontainer/compose.local.yaml
+
 # protoforge
 openapi/src/@typespec/
 proto/.tmp/

@@ -27,3 +27,8 @@ curl -L "https://github.com/hilmoo/protoforge/releases/download/v${PROTOFORGE_VE
 direnv reload
 
 perl -0pi -e 's/,(\s*[}\]])/$1/g' devbox.jsonc # vscode complains about trailing commas in devbox.jsonc, so remove them
+
+# per-developer hook, set POST_CREATE_LOCAL in compose.local.yaml (e.g. install your coding agent)
+if [ -n "${POST_CREATE_LOCAL:-}" ]; then
+  bash -c "$POST_CREATE_LOCAL"
+fi

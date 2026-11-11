@@ -1,6 +1,12 @@
 {
 	"name": "web-app-template",
-	"dockerComposeFile": "compose.yaml",
+	// compose.local.yaml is a gitignored per-developer override,
+	// created from compose.local.example.yaml on the host before compose runs.
+	"dockerComposeFile": [
+		"compose.yaml",
+		"compose.local.yaml"
+	],
+	"initializeCommand": "test -f .devcontainer/compose.local.yaml || cp .devcontainer/compose.local.example.yaml .devcontainer/compose.local.yaml",
 	"service": "workspace",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"remoteUser": "vscode",
