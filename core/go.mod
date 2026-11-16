@@ -5,11 +5,11 @@ go 1.27.2
 require (
 	connectrpc.com/connect v1.21.1
 	connectrpc.com/grpcreflect v1.3.1
-	github.com/caarlos0/env/v11 v11.4.1
+	github.com/caarlos0/env/v11 v11.4.2
 	github.com/golang-migrate/migrate/v4 v4.20.1
 	github.com/google/uuid v1.6.0
 	github.com/hilmoo/gomox v0.0.0-20261018103541-f08e347261d1
-	github.com/jackc/pgx/v5 v5.11.0
+	github.com/jackc/pgx/v5 v5.13.0
 	github.com/matthewhartstonge/argon2 v1.6.4
 	github.com/ory/herodot v0.10.8
 	github.com/urfave/cli/v3 v3.14.0
@@ -26,7 +26,7 @@ require (
 	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
-	github.com/jackc/puddle/v2 v2.2.2 // indirect
+	github.com/jackc/puddle/v2 v2.2.3 // indirect
 	github.com/labstack/echo/v5 v5.3.1 // indirect
 	github.com/leodido/go-urn v1.5.0 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
