@@ -2,7 +2,7 @@
 
 ARG NODE_VERSION=24
 ARG GO_VERSION=1.27
-ARG PNPM_VERSION=12.13.0
+ARG PNPM_VERSION=12.21.0
 
 # ---- Frontend build: produces frontend/dist ----
 FROM node:${NODE_VERSION}-slim AS frontend
