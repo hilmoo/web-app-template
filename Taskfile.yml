@@ -25,6 +25,7 @@ tasks:
   dev:
     desc: Start core + frontend in a zellij session
     cmds:
+      - task: proto:build-typescript
       - task: dev:kill
       - defer: zellij attach dev
       - zellij --session dev --new-session-with-layout zellij-dev.kdl
@@ -35,6 +36,11 @@ tasks:
     cmds:
       - zellij delete-session dev --force
       - ./scripts/kill-orphans.sh
+
+  dev:atach:
+    desc: Attach to the dev session
+    cmds:
+      - zellij attach dev
 
   lint:
     desc: Lint core and frontend
