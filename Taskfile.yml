@@ -19,7 +19,6 @@ includes:
     taskfile: proto/Taskfile.yml
     dir: proto
   gen: https://raw.githubusercontent.com/hilmoo/protoforge/refs/tags/v0.0.3/Taskfile.yml
-    
 
 tasks:
   dev:
@@ -27,7 +26,6 @@ tasks:
     cmds:
       - task: proto:build-typescript
       - task: dev:kill
-      - defer: zellij attach dev
       - zellij --session dev --new-session-with-layout zellij-dev.kdl
 
   dev:kill:
@@ -37,7 +35,7 @@ tasks:
       - zellij delete-session dev --force
       - ./scripts/kill-orphans.sh
 
-  dev:atach:
+  dev:attach:
     desc: Attach to the dev session
     cmds:
       - zellij attach dev
