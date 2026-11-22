@@ -61,12 +61,20 @@ Generated files are committed and marked `linguist-generated`. Edit the **source
 
 ## Getting started
 
-1. Scaffold (the script prompts for the project name, replaces the `web-app-template` placeholder everywhere, and sets up `.devcontainer/.env`):
+1. Scaffold (the script prompts for the project name, replaces the `web-app-template` placeholder everywhere, and sets up `.devcontainer/.env`). Use plain git rather than `degit`, which does not preserve the `.claude/skills` symlinks:
    ```bash
-   npx degit hilmoo/web-app-template my-new-app
+   git clone --depth 1 https://github.com/hilmoo/web-app-template my-new-app
    cd my-new-app
+   rm -rf .git && git init
    scripts/init.sh   # prompts for the project name and devcontainer nix setup, then deletes itself
-   git init && git add -A && git commit -m "init"
+   git add -A && git commit -m "init"
+   ```
+   Alternatively, with the GitHub CLI (creates your own repo from the template):
+   ```bash
+   gh repo create my-new-app --template hilmoo/web-app-template --private --clone
+   cd my-new-app
+   scripts/init.sh
+   git add -A && git commit -m "init"
    ```
 2. Open in the devcontainer (installs devbox, pnpm deps, git hooks, protoforge and creates `.env`). Without it: `devbox shell`, `pnpm install`, `cp .env.example .env`.
 3. `task proto:build-typescript` once, so the frontend can import the TS proto package (`task gen:all` does this too).
