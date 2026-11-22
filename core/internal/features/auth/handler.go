@@ -86,7 +86,6 @@ func (h *connectHandler) AuthLogout(
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)
 	}
-	// Transport work on the raw token: logout deletes the session the cookie names.
 	token, errH := helper.SessionTokenFromHeader(callInfo.RequestHeader())
 	if errH != nil {
 		return nil, errort.ConnectError(ctx, errH)

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Interactive setup: replace the `web-app-template` placeholder with your app
 # name and configure the devcontainer's nix (host or shared docker volume).
-# Usage: scripts/rename.sh   (deletes itself when done)
 set -euo pipefail
 
 self="$(realpath "$0")"
@@ -20,7 +19,6 @@ confirm() { # confirm <prompt> <y|n default>
   [[ "$REPLY" =~ ^[Yy] ]]
 }
 
-# --- project name ---
 while true; do
   ask "Project name (lowercase letters, digits, dashes)" "$(basename "$PWD")"
   name="$REPLY"
@@ -33,7 +31,6 @@ grep -rIl "web-app-template" . \
   | xargs -r sed -i "s/web-app-template/${name}/g"
 echo "Renamed to ${name}."
 
-# --- devcontainer nix ---
 env_file=.devcontainer/.env
 write_env=true
 if [[ -f "$env_file" ]] && ! confirm "$env_file already exists. Overwrite?" n; then

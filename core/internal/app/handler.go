@@ -35,8 +35,6 @@ func Handler(arg helper.HandlerParams) http.Handler {
 	return mux
 }
 
-// AccessInternalOnly lists procedures callable only with the service secret.
-// Procedures that are not listed (here or in a feature's own policy) require authentication.
 var AccessInternalOnly = helper.AccessPolicy{} //nolint:gochecknoglobals // static policy table
 
 func RegisterConnect(handleArg helper.HandlerParams, mux *http.ServeMux) []string {

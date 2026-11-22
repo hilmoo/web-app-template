@@ -10,14 +10,12 @@ import (
 	"github.com/matthewhartstonge/argon2"
 )
 
-// Service defines the auth business operations.
 type Service interface {
 	Login(ctx context.Context, in LoginInput) (Result, error)
 	Register(ctx context.Context, in RegisterInput) (Result, error)
 	Logout(ctx context.Context, token string) error
 	Me(ctx context.Context, userID uuid.UUID) (User, error)
 	UpdateMe(ctx context.Context, userID uuid.UUID, in UpdateMeInput) (User, error)
-	// UserIDByToken satisfies helper.SessionResolver for the auth interceptor.
 	UserIDByToken(ctx context.Context, token string) (uuid.UUID, error)
 }
 
@@ -34,7 +32,7 @@ func NewService(repo Repository, secret string) Service {
 func (s *service) Login(ctx context.Context, in LoginInput) (Result, error) {
 	user, err := s.repo.FindUserByEmail(ctx, in.Email)
 	if errors.Is(err, ErrUserNotFound) {
-		return Result{}, ErrInvalidCredentials // don't reveal which part was wrong
+		return Result{}, ErrInvalidCredentials
 	}
 	if err != nil {
 		return Result{}, err
@@ -97,7 +95,6 @@ func (s *service) UserIDByToken(ctx context.Context, token string) (uuid.UUID, e
 	return s.repo.FindSessionUserID(ctx, hashSessionToken(s.secret, token))
 }
 
-// newSession returns a fresh raw token and the session row that stores its hash.
 func (s *service) newSession(meta SessionMeta) (string, newSession, error) {
 	token, err := newSessionToken()
 	if err != nil {

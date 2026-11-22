@@ -10,7 +10,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// Repository defines the data-access contract for users and their sessions.
 type Repository interface {
 	FindUserByID(ctx context.Context, id uuid.UUID) (User, error)
 	FindUserByEmail(ctx context.Context, email string) (User, error)

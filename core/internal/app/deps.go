@@ -12,8 +12,6 @@ import (
 	"github.com/hilmoo/gomox/transport/validation"
 )
 
-// setupDependencies initializes all infrastructure clients and returns the
-// handler dependencies together with a cleanup function.
 func setupDependencies(
 	ctx context.Context,
 	cfg config.Config,

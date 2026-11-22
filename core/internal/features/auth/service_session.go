@@ -12,9 +12,7 @@ import (
 )
 
 const (
-	// sessionDuration is how long a newly created session remains valid.
-	sessionDuration = 7 * 24 * time.Hour
-	// randomTokenBytes is the number of random bytes used to generate a session token.
+	sessionDuration  = 7 * 24 * time.Hour
 	randomTokenBytes = 32
 )
 

@@ -22,7 +22,6 @@ const (
 	serviceSecret     = "service-secret"
 )
 
-// fakeSessions is a SessionResolver backed by a token -> user map.
 type fakeSessions map[string]uuid.UUID
 
 func (f fakeSessions) UserIDByToken(_ context.Context, token string) (uuid.UUID, error) {
@@ -34,7 +33,6 @@ func (f fakeSessions) UserIDByToken(_ context.Context, token string) (uuid.UUID,
 	return id, nil
 }
 
-// newClient serves one procedure behind the interceptor; seen receives the caller's user id.
 func newClient(
 	t *testing.T,
 	sessions helper.SessionResolver,

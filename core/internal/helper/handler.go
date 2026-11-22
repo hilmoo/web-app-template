@@ -13,8 +13,6 @@ import (
 	"github.com/ory/herodot"
 )
 
-// HandlerParams is the infra container built by internal/app. Features never receive it;
-// internal/app builds each feature's own Deps from it.
 type HandlerParams struct {
 	Validate *validation.Vld
 	Pool     *pgxpool.Pool

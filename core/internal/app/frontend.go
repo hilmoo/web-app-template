@@ -13,8 +13,6 @@ import (
 //go:embed all:dist
 var dist embed.FS
 
-// registerFrontend mounts the embedded static files, falling back to index.html for
-// unknown paths (SPA routing).
 func registerFrontend(mux *http.ServeMux) {
 	root, err := fs.Sub(dist, "dist")
 	if err != nil {

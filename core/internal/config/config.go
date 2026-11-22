@@ -10,16 +10,13 @@ import (
 )
 
 type Config struct {
-	// Base
 	ListenAddr string `env:"LISTEN_ADDR" envDefault:"127.0.0.1:8080"`
 	ListenHost string `env:"-"`
 	ListenPort int    `env:"-"`
 	LogLevel   string `env:"LOG_LEVEL"   envDefault:"INFO"`
 	LogOutput  string `env:"LOG_OUTPUT"  envDefault:"stdout"`
 
-	// Secret is used to hash session tokens.
-	Secret string `env:"SECRET,required"`
-	// ServiceSecret is the bearer token trusted services present (Authorization: Bearer ...).
+	Secret        string `env:"SECRET,required"`
 	ServiceSecret string `env:"SERVICE_SECRET,required"`
 	AppEnv        string `env:"APP_ENV"`
 	IsProd        bool
@@ -59,10 +56,8 @@ func LoadConfig() (Config, error) {
 	return c, nil
 }
 
-// minProdSecretLen is the shortest SECRET / SERVICE_SECRET accepted in production.
 const minProdSecretLen = 32
 
-// validateProdSecrets rejects the placeholder values from .env.example and short secrets.
 func validateProdSecrets(c Config) error {
 	secrets := map[string]string{"SECRET": c.Secret, "SERVICE_SECRET": c.ServiceSecret}
 	for name, value := range secrets {

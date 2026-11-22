@@ -14,8 +14,6 @@ type Deps struct {
 	IsProd   bool
 }
 
-// Bundle exposes the service too: internal/app passes it to the auth interceptor
-// as its helper.SessionResolver.
 type Bundle struct {
 	Handler corev1connect.AuthServiceHandler
 	Svc     Service

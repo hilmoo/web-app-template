@@ -14,22 +14,17 @@ import (
 )
 
 const (
-	// SessionCookieName is the cookie that carries the user session token.
 	SessionCookieName = "session"
 	// ServiceUserIDHeader lets a service caller act on behalf of a user. It is only
 	// honoured together with valid service credentials.
 	ServiceUserIDHeader = "X-User-Id"
 )
 
-// Access is the credential level a procedure requires.
 type Access int
 
 const (
-	// AccessAuthenticated requires either a user session cookie or the service secret.
 	AccessAuthenticated Access = iota
-	// AccessPublic requires no credentials.
 	AccessPublic
-	// AccessService requires the service secret; user sessions are rejected.
 	AccessService
 )
 
@@ -49,9 +44,7 @@ func (p AccessPolicy) Merge(others ...AccessPolicy) AccessPolicy {
 
 type principalCtxKey struct{}
 
-// Principal is the authenticated caller attached to the request context by the interceptor.
 type Principal struct {
-	// Service is true when the caller presented the service secret.
 	Service bool
 	// UserID is the user session's owner, or for service callers the user named in
 	// ServiceUserIDHeader. It is uuid.Nil when there is no user.
@@ -74,8 +67,7 @@ func UserIDFromContext(ctx context.Context) (uuid.UUID, *herodot.DefaultError) {
 	return p.UserID, nil
 }
 
-// SessionResolver maps a raw session token to the id of its user. It is what the
-// interceptor needs from whichever feature owns sessions; internal/app wires it in.
+// SessionResolver maps a raw session token to the id of its user.
 // Any error means the token is not a valid, unexpired session.
 type SessionResolver interface {
 	UserIDByToken(ctx context.Context, token string) (uuid.UUID, error)
@@ -87,10 +79,8 @@ type authInterceptor struct {
 	policy        AccessPolicy
 }
 
-// NewAuthInterceptor returns a Connect interceptor that authenticates every call. Users
-// authenticate with the session cookie; services with `Authorization: Bearer <SERVICE_SECRET>`
-// and may add `X-User-Id: <uuid>` to act as a user.
-// Per-procedure requirements come from policy; unlisted procedures need authentication.
+// NewAuthInterceptor returns a Connect interceptor that authenticates every call.
+// Procedures missing from policy require authentication.
 func NewAuthInterceptor(arg HandlerParams, sessions SessionResolver, policy ...AccessPolicy) connect.Interceptor {
 	p := make(AccessPolicy)
 	for _, v := range policy {

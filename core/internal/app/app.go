@@ -16,8 +16,6 @@ import (
 )
 
 const (
-	// errChBufferSize allows both the HTTP server goroutine and future background
-	// goroutines to report a failure without blocking on send.
 	errChBufferSize = 2
 
 	gracefulShutdownTimeout = 10 * time.Second
@@ -41,7 +39,6 @@ func Main(cfg config.Config, logger *slog.Logger) error {
 }
 
 func startServer(deps *helper.HandlerParams, errCh chan<- error) *http.Server {
-	// HTTP/1.1 for browsers and Connect, cleartext HTTP/2 for gRPC clients.
 	protocols := new(http.Protocols)
 	protocols.SetHTTP1(true)
 	protocols.SetUnencryptedHTTP2(true)
